@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dorian's Timer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#4F46E5', // Indigo
+                        secondary: '#F87171', // Red
+                        background: '#F3F4F6', // Gray
+                        card: '#FFFFFF',
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: theme('colors.background');
+            color: #374151;
+        }
+
+        .card {
+            background-color: theme('colors.card');
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .value {
+            color: theme('colors.primary');
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .label {
+            color: theme('colors.secondary');
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .animate-pulse-fast {
+            animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen p-4 space-y-8">
+
+    <!-- Section showing years, months, days, etc. since birth -->
+    <div class="card p-8 sm:p-12 rounded-2xl text-center w-full max-w-2xl animate-pulse-fast">
+        <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-primary">Dorian is...</h1>
+        <p class="text-lg sm:text-xl text-gray-600 mb-8">since 31.08.2017 at 19:20</p>
+        <div id="counter-since" class="grid grid-cols-2 sm:grid-cols-3 gap-6 sm:gap-8"></div>
+    </div>
+
+    <!-- Section showing time until next birthday -->
+    <div class="card p-8 sm:p-12 rounded-2xl text-center w-full max-w-2xl animate-pulse-fast">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4 text-primary">Until the next birthday...</h2>
+        <p class="text-lg sm:text-xl text-gray-600 mb-8">The big day is coming!</p>
+        <div id="counter-until" class="grid grid-cols-2 sm:grid-cols-3 gap-6 sm:gap-8"></div>
+    </div>
+
+    <!-- Section showing total cumulative time since birth -->
+    <div class="card p-6 sm:p-8 rounded-2xl text-center w-full max-w-2xl animate-pulse-fast">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4 text-primary">Time in Life</h2>
+        <div id="counter-total-since" class="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6"></div>
+    </div>
+
+    <script>
+        const birthDate = new Date('2017-08-31T19:20:00');
+        const counterSinceElement = document.getElementById('counter-since');
+        const counterUntilElement = document.getElementById('counter-until');
+        const counterTotalSinceElement = document.getElementById('counter-total-since');
+
+        function populateCounter(element, data, valueClass = 'value text-4xl sm:text-5xl font-extrabold') {
+            element.innerHTML = '';
+            data.forEach(item => {
+                const counterItem = document.createElement('div');
+                counterItem.className = 'flex flex-col items-center p-2 sm:p-4 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 bg-gray-50';
+
+                if (Array.isArray(item.value)) {
+                    item.value.forEach(line => {
+                        const valueSpan = document.createElement('span');
+                        valueSpan.className = valueClass + ' truncate';
+                        valueSpan.textContent = line;
+                        counterItem.appendChild(valueSpan);
+                    });
+                } else {
+                    const valueSpan = document.createElement('span');
+                    valueSpan.className = valueClass + ' truncate';
+                    valueSpan.textContent = item.value;
+                    counterItem.appendChild(valueSpan);
+                }
+
+                if(item.label) {
+                    const labelSpan = document.createElement('span');
+                    labelSpan.className = 'label text-md sm:text-lg font-semibold mt-2';
+                    labelSpan.textContent = item.label;
+                    counterItem.appendChild(labelSpan);
+                }
+
+                element.appendChild(counterItem);
+            });
+        }
+
+        function updateCounter() {
+            const now = new Date();
+
+            // --- TIME SINCE BIRTH ---
+            const differenceSince = now.getTime() - birthDate.getTime();
+            const secondsSince = Math.floor(differenceSince / 1000);
+            const minutesSince = Math.floor(secondsSince / 60);
+            const hoursSince = Math.floor(minutesSince / 60);
+            const daysSince = Math.floor(hoursSince / 24);
+            const monthsSince = Math.floor(daysSince / (365.25 / 12));
+            const yearsSince = Math.floor(monthsSince / 12);
+
+            const remainingMonthsSince = monthsSince % 12;
+            const remainingDaysSince = Math.floor(daysSince % (365.25 / 12));
+            const remainingHoursSince = hoursSince % 24;
+            const remainingMinutesSince = minutesSince % 60;
+            const remainingSecondsSince = secondsSince % 60;
+
+            populateCounter(counterSinceElement, [
+                { value: yearsSince.toLocaleString(), label: 'Years' },
+                { value: remainingMonthsSince.toLocaleString(), label: 'Months' },
+                { value: remainingDaysSince.toLocaleString(), label: 'Days' },
+                { value: remainingHoursSince.toLocaleString(), label: 'Hours' },
+                { value: remainingMinutesSince.toLocaleString(), label: 'Minutes' },
+                { value: remainingSecondsSince.toLocaleString(), label: 'Seconds' }
+            ]);
+
+            // --- TIME UNTIL NEXT BIRTHDAY ---
+            const nextBirthday = new Date(now.getFullYear(), birthDate.getMonth(), birthDate.getDate(), birthDate.getHours(), birthDate.getMinutes(), birthDate.getSeconds());
+            if (nextBirthday.getTime() < now.getTime()) nextBirthday.setFullYear(now.getFullYear() + 1);
+
+            const differenceUntil = nextBirthday.getTime() - now.getTime();
+            const remainingSecondsUntil = Math.floor(differenceUntil / 1000);
+            const remainingMinutesUntil = Math.floor(remainingSecondsUntil / 60);
+            const remainingHoursUntil = Math.floor(remainingMinutesUntil / 60);
+            const remainingDaysUntil = Math.floor(remainingHoursUntil / 24);
+            const displayMonthsUntil = Math.floor(remainingDaysUntil / (365.25 / 12));
+            const displayWeeksUntil = Math.floor((remainingDaysUntil % 365.25) / 7);
+            const displayDaysUntil = remainingDaysUntil % 7;
+            const displayHoursUntil = remainingHoursUntil % 24;
+            const displayMinutesUntil = remainingMinutesUntil % 60;
+            const displaySecondsUntil = remainingSecondsUntil % 60;
+
+            populateCounter(counterUntilElement, [
+                { value: displayMonthsUntil.toLocaleString(), label: 'Months' },
+                { value: displayWeeksUntil.toLocaleString(), label: 'Weeks' },
+                { value: displayDaysUntil.toLocaleString(), label: 'Days' },
+                { value: displayHoursUntil.toLocaleString(), label: 'Hours' },
+                { value: displayMinutesUntil.toLocaleString(), label: 'Minutes' },
+                { value: displaySecondsUntil.toLocaleString(), label: 'Seconds' }
+            ]);
+
+            // --- TOTAL TIME SINCE BIRTH (smaller font for big numbers) ---
+            const weeksSince = Math.floor(daysSince / 7);
+            const remainingDaysMonths = daysSince % Math.floor(365.25 / 12);
+            const remainingDaysWeeks = daysSince % 7;
+
+            populateCounter(counterTotalSinceElement, [
+                { value: yearsSince.toLocaleString(), label: 'Years' },
+                { value: [`${monthsSince.toLocaleString()} months,`, `${remainingDaysMonths.toLocaleString()} days`], label: '' },
+                { value: [`${weeksSince.toLocaleString()} weeks,`, `${remainingDaysWeeks.toLocaleString()} days`], label: '' },
+                { value: hoursSince.toLocaleString(), label: 'Hours' },
+                { value: minutesSince.toLocaleString(), label: 'Minutes' },
+                { value: secondsSince.toLocaleString(), label: 'Seconds' }
+            ], 'value text-xl sm:text-2xl font-extrabold truncate');
+        }
+
+        setInterval(updateCounter, 1000);
+        window.onload = updateCounter;
+    </script>
+</body>
+</html>
