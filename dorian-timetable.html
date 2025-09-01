@@ -110,7 +110,7 @@
       LK: { en: "Art", bs: "Likovna kultura", tr: "Resim Sanatı" },
       DKR: { en: "Society/Culture/Religion", bs: "Društvo/Kultura/Religija", tr: "Toplum/Kültür/Din" },
       TZO: { en: "Physical & Health Education", bs: "Tjelesni i zdravstveni odgoj", tr: "Beden Eğitimi ve Sağlık" },
-      INFO: { en: "Informatics", bs: "Informatika", tr: "Informatik" }
+      INFO: { en: "Informatics", bs: "Informatika", tr: "Bilişim" }
     };
 
     const timetableData = {
@@ -154,4 +154,63 @@
       html += "</tr>";
 
       const maxPeriods = Math.max(...days.map(d => timetableData[shift][d].length));
-      for (let p=0;
+      for (let p=0; p<maxPeriods; p++) {
+        html += "<tr><td></td>";
+        days.forEach(day => {
+          const subj = timetableData[shift][day][p] || "";
+          if (subj) {
+            html += `<td><span data-fullname="${subjectFullNames[subj][currentLang]}">${subj}</span></td>`;
+          } else {
+            html += "<td></td>";
+          }
+        });
+        html += "</tr>";
+      }
+      document.getElementById("timetable").innerHTML = html;
+    }
+
+    function updateHeader(date, shift) {
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const todayStr = date.toLocaleDateString(currentLang === "bs" ? "bs" : currentLang === "tr" ? "tr" : "en-GB", options);
+
+      const todayDay = date.toLocaleDateString("en-GB", { weekday: "long" });
+      const times = (todayDay === "Friday") ? shiftTimes[shift].friday : shiftTimes[shift].default;
+
+      const text = {
+        en: `Today: ${todayStr} | Shift: ${shift === "morning" ? "Morning" : "Afternoon"} | Lessons: ${times}`,
+        bs: `Danas: ${todayStr} | Smjena: ${shift === "morning" ? "Prva (jutarnja)" : "Druga (popodnevna)"} | Časovi: ${times}`,
+        tr: `Bugün: ${todayStr} | Vardiya: ${shift === "morning" ? "Sabah" : "Öğleden Sonra"} | Dersler: ${times}`
+      };
+
+      document.getElementById("todayInfo").innerText = text[currentLang];
+    }
+
+    function translateDay(day) {
+      const translations = {
+        en: {Monday:"Monday",Tuesday:"Tuesday",Wednesday:"Wednesday",Thursday:"Thursday",Friday:"Friday"},
+        bs: {Monday:"Ponedjeljak",Tuesday:"Utorak",Wednesday:"Srijeda",Thursday:"Četvrtak",Friday:"Petak"},
+        tr: {Monday:"Pazartesi",Tuesday:"Salı",Wednesday:"Çarşamba",Thursday:"Perşembe",Friday:"Cuma"}
+      };
+      return translations[currentLang][day];
+    }
+
+    function changeLang(lang) {
+      currentLang = lang;
+      const today = new Date();
+      const shift = getCurrentShift(today);
+      renderTable(shift);
+      updateHeader(today, shift);
+    }
+
+    function toggleTheme() {
+      document.body.classList.toggle("dark");
+    }
+
+    // Init
+    const today = new Date();
+    const shift = getCurrentShift(today);
+    renderTable(shift);
+    updateHeader(today, shift);
+  </script>
+</body>
+</html>
