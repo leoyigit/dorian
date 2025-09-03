@@ -258,15 +258,23 @@
         { start: 8 * 60 + 0, end: 8 * 60 + 40 },
         { start: 8 * 60 + 50, end: 9 * 60 + 30 },
         { start: 9 * 60 + 40, end: 10 * 60 + 20 },
-        { start: 10 * 60 + 30, end: 11 * 60 + 10 },
-        { start: 11 * 60 + 20, end: 12 * 60 + 0 } // Optional 5th lesson slot
+        { start: 10 * 60 + 30, end: 11 * 60 + 30 } // last slot ends 11:30
       ],
       afternoon: [
         { start: 14 * 60 + 0, end: 14 * 60 + 40 },
         { start: 14 * 60 + 50, end: 15 * 60 + 30 },
         { start: 15 * 60 + 40, end: 16 * 60 + 20 },
-        { start: 16 * 60 + 30, end: 17 * 60 + 10 },
-        { start: 17 * 60 + 20, end: 18 * 60 + 0 } // Optional 5th lesson slot
+        { start: 16 * 60 + 30, end: 17 * 60 + 30 } // last slot ends 17:30
+      ],
+      morningFriday: [
+        { start: 8 * 60 + 0, end: 8 * 60 + 40 },
+        { start: 8 * 60 + 50, end: 9 * 60 + 30 },
+        { start: 9 * 60 + 40, end: 10 * 60 + 40 } // last slot ends 10:40
+      ],
+      afternoonFriday: [
+        { start: 14 * 60 + 0, end: 14 * 60 + 40 },
+        { start: 14 * 60 + 50, end: 15 * 60 + 30 },
+        { start: 15 * 60 + 40, end: 16 * 60 + 40 } // last slot ends 16:40
       ]
     };
 
@@ -330,55 +338,49 @@
       return div;
     }
 
-    // New function to update highlights based on current time
     function updateHighlights(shift, lang) {
-      const today = new Date();
-      // Using today.getDay() returns 0 for Sunday, 1 for Monday, etc.
-      // We need to map it to our 0-4 index.
-      const currentDayIndex = today.getDay() - 1; 
-      const currentMinute = today.getHours() * 60 + today.getMinutes();
-      const timetable = document.getElementById('timetable');
-      const dayHeaders = timetable.querySelectorAll('.header');
-      
-      // Reset all highlights first
-      dayHeaders.forEach(header => header.classList.remove('current-day-header'));
-      document.querySelectorAll('.current-lesson').forEach(cell => cell.classList.remove('current-lesson', 'blinking'));
-      
-      // If it's a weekday (Monday-Friday) and school is in session, apply highlights
-      if (currentDayIndex >= 0 && currentDayIndex <= 4) {
-        // Highlight current day's header
-        dayHeaders[currentDayIndex].classList.add('current-day-header');
-        
-        // Find the current lesson based on time
-        const lessonIndex = getLessonIndexForTime(shift, currentMinute);
-        
-        // If there's a current lesson, highlight the entire row
-        if (lessonIndex !== -1) {
-          const firstCellOfRow = dayHeaders.length + (lessonIndex * 5);
-          for (let i = 0; i < 5; i++) {
-            const cell = timetable.children[firstCellOfRow + i];
-            if (cell.textContent !== "") { // Only highlight cells with content
-              cell.classList.add('current-lesson');
+        const today = new Date();
+        const currentDayIndex = today.getDay() - 1; // 0=Mon ... 4=Fri
+        const currentMinute = today.getHours() * 60 + today.getMinutes();
+        const timetable = document.getElementById('timetable');
+        const dayHeaders = timetable.querySelectorAll('.header');
+        const isFriday = today.getDay() === 5;
+
+        // Reset highlights
+        dayHeaders.forEach(header => header.classList.remove('current-day-header'));
+        document.querySelectorAll('.current-lesson').forEach(cell => cell.classList.remove('current-lesson', 'blinking'));
+
+        if (currentDayIndex >= 0 && currentDayIndex <= 4) {
+          // Highlight day header
+          dayHeaders[currentDayIndex].classList.add('current-day-header');
+
+          // Find lesson
+          const lessonIndex = getLessonIndexForTime(shift, currentMinute, isFriday);
+
+          if (lessonIndex !== -1) {
+            const firstCellOfRow = dayHeaders.length + (lessonIndex * 5);
+            const currentLessonCell = timetable.children[firstCellOfRow + currentDayIndex];
+            if (currentLessonCell && currentLessonCell.textContent !== "") {
+              currentLessonCell.classList.add('current-lesson', 'blinking');
             }
-          }
-          // Highlight the specific cell for the current day
-          const currentLessonCell = timetable.children[firstCellOfRow + currentDayIndex];
-          if (currentLessonCell && currentLessonCell.textContent !== "") {
-              currentLessonCell.classList.add('blinking');
           }
         }
       }
-    }
 
     // New function to determine which lesson is currently active
-    function getLessonIndexForTime(shift, currentMinute) {
-      const periods = lessonTimes[shift];
+    function getLessonIndexForTime(shift, currentMinute, isFriday) {
+      let periods;
+      if (isFriday) {
+        periods = (shift === "morning") ? lessonTimes.morningFriday : lessonTimes.afternoonFriday;
+      } else {
+        periods = lessonTimes[shift];
+      }
       for (let i = 0; i < periods.length; i++) {
         if (currentMinute >= periods[i].start && currentMinute < periods[i].end) {
           return i;
         }
       }
-      return -1; // No lesson is currently active
+      return -1; // no lesson active
     }
 
     function render(lang) {
