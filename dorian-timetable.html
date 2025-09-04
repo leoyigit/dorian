@@ -66,17 +66,21 @@
       opacity: 0.9;
     }
 
+    .timetable-wrapper {
+        max-width: 800px;
+        margin: 20px auto;
+        position: relative;
+    }
+
     .timetable {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    max-width: 800px;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    overflow: hidden;
-    background: var(--card);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    margin: 20px auto;
-    overflow-x: auto;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--card);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      overflow-x: auto;
     }
 
     .timetable div {
@@ -84,7 +88,6 @@
       padding: 12px;
       text-align: center;
       font-size: 0.9rem;
-      position: relative;
     }
 
     .header {
@@ -93,9 +96,27 @@
       font-weight: bold;
     }
 
-    /* New CSS for highlighting */
+    /* Updated CSS for the thin red line */
+    .time-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 2px;
+      background-color: #ff0000;
+      width: 100%;
+      z-index: 10;
+      transform: translateY(-50%); /* Adjust to center the line vertically */
+      transition: top 60s linear; /* Smooth movement over a minute */
+    }
+
+    /* A new class to temporarily disable transition on load */
+    .time-line.no-transition {
+      transition: none !important;
+    }
+
+    /* Updated CSS for highlighting the current day only */
     .current-day-header {
-      background: #e6e6ff; /* A lighter shade for a subtle highlight */
+      background: #e6e6ff;
       color: #6366f1;
       border: 2px solid #6366f1;
     }
@@ -105,6 +126,7 @@
       color: #6366f1;
     }
 
+    /* New CSS for highlighting the current lesson cell */
     .current-lesson {
       background: #d1e7dd; /* Light green for current lesson */
       color: #155724;
@@ -154,7 +176,7 @@
   <h1 id="title"></h1>
   <div class="controls">
     <button id="theme-toggle">🌙 Dark</button>
-    <button id="shift-toggle">Switch Shift</button>
+    <button id="shift-toggle">⇄</button>
     <select id="language-select">
       <option value="en">English 🇬🇧</option>
       <option value="bs">Bosanski 🇧🇦</option>
@@ -165,7 +187,10 @@
   <h3 id="shift-label"></h3>
   <h3 id="shift-time"></h3>
 
-  <div class="timetable" id="timetable"></div>
+  <div class="timetable-wrapper">
+      <div class="timetable" id="timetable"></div>
+      <div id="current-time-line" class="time-line no-transition"></div>
+  </div>
 
   <script>
     const translations = {
@@ -290,54 +315,33 @@
 
     function buildTimetable(shift, lang) {
       const table = document.getElementById("timetable");
-      table.innerHTML = "";
-
       const tr = translations[lang];
       const days = tr.days;
-
-      // Header row
+      
+      let html = '';
+      
+      // Build header row
       days.forEach(day => {
-        const headerCell = createCell(day, "header");
-        table.appendChild(headerCell);
+        html += `<div class="header">${day}</div>`;
       });
 
       // Max lessons in a day
       const maxPeriods = Math.max(...Object.values(timetableData[shift]).map(d => d.length));
 
       for (let p = 0; p < maxPeriods; p++) {
-        Object.keys(timetableData[shift]).forEach((dayKey, idx) => {
+        // Corrected: Use the ordered `days` array to build the content rows
+        days.forEach(dayKey => {
           const code = timetableData[shift][dayKey][p] || "";
           const full = tr.subjects[code] || "";
-          table.appendChild(createCell(code, "", full));
+          if (full) {
+             html += `<div title="${full}">${code}</div>`;
+          } else {
+             html += `<div>${code}</div>`;
+          }
         });
       }
-    }
-
-    function createCell(text, className, tooltipText = "") {
-      const div = document.createElement("div");
-      if (className) div.classList.add(className);
-      div.textContent = text;
       
-      if (tooltipText) {
-        const tooltip = document.createElement("span");
-        tooltip.className = "tooltip";
-        tooltip.textContent = tooltipText;
-        div.appendChild(tooltip);
-
-        div.addEventListener('mouseenter', () => {
-          tooltip.style.opacity = '1';
-        });
-
-        div.addEventListener('mouseleave', () => {
-          tooltip.style.opacity = '0';
-        });
-
-        div.addEventListener('mousemove', (e) => {
-          tooltip.style.left = (e.clientX + 15) + 'px';
-          tooltip.style.top = (e.clientY + 15) + 'px';
-        });
-      }
-      return div;
+      table.innerHTML = html;
     }
 
     function updateHighlights(shift, lang) {
@@ -348,7 +352,7 @@
         const dayHeaders = timetable.querySelectorAll('.header');
         const isFriday = today.getDay() === 5;
 
-        // Reset highlights
+        // Reset all highlights
         dayHeaders.forEach(header => header.classList.remove('current-day-header'));
         document.querySelectorAll('.current-lesson').forEach(cell => cell.classList.remove('current-lesson', 'blinking'));
 
@@ -367,8 +371,8 @@
             }
           }
         }
-      }
-
+    }
+    
     // New function to determine which lesson is currently active
     function getLessonIndexForTime(shift, currentMinute, isFriday) {
       let periods;
@@ -383,6 +387,67 @@
         }
       }
       return -1; // no lesson active
+    }
+
+    // Function to update the red line's position
+    function updateTimeLinePosition(shift, isFriday) {
+      const now = new Date();
+      const currentMinuteOfDay = now.getHours() * 60 + now.getMinutes();
+      const currentDayIndex = now.getDay() - 1; // 0=Mon, 1=Tue... 4=Fri
+      const lang = localStorage.getItem("lang") || "bs";
+
+      const timeLine = document.getElementById('current-time-line');
+      const timetableWrapper = document.querySelector('.timetable-wrapper');
+      const timetable = document.getElementById('timetable');
+      const dayHeaders = timetable.querySelectorAll('.header');
+
+      // Determine the lesson period and start/end times
+      let lessonPeriod;
+      if (isFriday) {
+        lessonPeriod = (shift === "morning") ? lessonTimes.morningFriday : lessonTimes.afternoonFriday;
+      } else {
+        lessonPeriod = lessonTimes[shift];
+      }
+      
+      const startTime = lessonPeriod[0].start;
+      const endTime = lessonPeriod[lessonPeriod.length - 1].end;
+
+      const totalShiftMinutes = endTime - startTime;
+
+      // Hide the line if it's not the correct shift or outside of lesson times
+      if (currentMinuteOfDay < startTime || currentMinuteOfDay > endTime) {
+        timeLine.style.display = 'none';
+        return;
+      } else {
+        timeLine.style.display = 'block';
+      }
+
+      // Find the current day's column more reliably
+      if (currentDayIndex < 0 || currentDayIndex > 4) {
+          timeLine.style.display = 'none';
+          return;
+      }
+
+      const currentDayName = translations[lang].days[currentDayIndex];
+      const dayHeader = Array.from(dayHeaders).find(header => header.textContent === currentDayName);
+
+      if (!dayHeader) {
+          timeLine.style.display = 'none';
+          return;
+      }
+
+      const leftPosition = dayHeader.offsetLeft;
+      const dayWidth = dayHeader.offsetWidth;
+
+      // Calculate vertical position
+      const minutesSinceStart = currentMinuteOfDay - startTime;
+      const totalTimetableHeight = timetable.clientHeight;
+      const topPositionPixels = (minutesSinceStart / totalShiftMinutes) * totalTimetableHeight;
+      
+      // Set the line's position and width relative to the wrapper
+      timeLine.style.left = `${leftPosition}px`;
+      timeLine.style.width = `${dayWidth}px`;
+      timeLine.style.top = `${timetable.offsetTop + topPositionPixels}px`;
     }
 
     function render(lang) {
@@ -423,11 +488,25 @@
       // Build table
       buildTimetable(shift, lang);
       
-      // Initial highlight update
+      // Set initial position without animation
+      const isFirstLoad = !document.getElementById('current-time-line').classList.contains('no-transition'); // This is a bit of a hack, we will improve it
+      
+      const timeLine = document.getElementById('current-time-line');
+      timeLine.classList.add('no-transition');
+      updateTimeLinePosition(shift, isFriday);
+      
+      setTimeout(() => {
+          timeLine.classList.remove('no-transition');
+      }, 100);
+
+      // Initial highlight
       updateHighlights(shift, lang);
 
-      // Set up a timer to update highlights every minute
-      setInterval(() => updateHighlights(shift, lang), 60 * 1000);
+      // Set up timers to update every minute
+      setInterval(() => {
+          updateHighlights(shift, lang);
+          updateTimeLinePosition(shift, isFriday);
+      }, 60 * 1000);
     }
 
     // Theme toggle
