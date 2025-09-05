@@ -1,550 +1,656 @@
 <!DOCTYPE html>
 <html lang="bs">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dorian's Timetable - 3rd Grade</title>
-  <style>
-    body {
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 20px;
-      background: var(--bg);
-      color: var(--text);
-      transition: background 0.3s, color 0.3s;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dorian's Timetable</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color-dark: #2c3e50;
+            --secondary-color-dark: #34495e;
+            --card-bg-dark: #4a657c;
+            --text-color-dark: #ecf0f1;
+            --highlight-bg-dark: #27ae60;
+            --highlight-text-dark: #fff;
+            --green-text-dark: #2ecc71;
+            --hover-bg-dark: #5e7d98;
 
-    :root {
-      --bg: #f8faff;
-      --text: #333;
-      --card: #fff;
-      --header-bg: #4f46e5;
-      --header-text: #fff;
-      --border: #ddd;
-      --cell-border: #eee;
-    }
+            --primary-color-light: #ecf0f1;
+            --secondary-color-light: #bdc3c7;
+            --card-bg-light: #dfe6ee;
+            --text-color-light: #2c3e50;
+            --highlight-bg-light: #27ae60;
+            --highlight-text-light: #2c3e50;
+            --green-text-light: #27ae60;
+            --hover-bg-light: #cad3dc;
+        }
 
-    body.dark {
-      --bg: #1e1e2f;
-      --text: #e0e0e0;
-      --card: #2c2c3c;
-      --header-bg: #6366f1;
-      --header-text: #fff;
-      --border: #444;
-      --cell-border: #555;
-    }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--primary-color-dark);
+            color: var(--text-color-dark);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 5px;
-    }
+        body.light-mode {
+            background-color: var(--primary-color-light);
+            color: var(--text-color-light);
+        }
 
-    h2, h3 {
-      text-align: center;
-      font-size: 1rem;
-      margin: 4px 0;
-    }
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            padding: 10px;
+        }
 
-    .controls {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-    select, button {
-      padding: 6px 12px;
-      font-size: 0.9rem;
-      border-radius: 6px;
-      border: 1px solid var(--border);
-      background: var(--card);
-      color: var(--text);
-      cursor: pointer;
-    }
+        h1 {
+            font-size: 2em;
+            font-weight: 600;
+            color: var(--text-color-dark);
+        }
 
-    button:hover, select:hover {
-      opacity: 0.9;
-    }
+        body.light-mode h1 {
+            color: var(--text-color-light);
+        }
+        
+        #datetime-display {
+            font-size: 1.1em;
+            font-weight: 400;
+            color: #95a5a6;
+            margin-top: -10px;
+        }
 
-    .timetable-wrapper {
-        max-width: 800px;
-        margin: 20px auto;
-        position: relative;
-    }
+        .shift-info {
+            font-size: 1em;
+            font-style: italic;
+            color: var(--text-color-dark);
+            margin-top: -10px;
+        }
 
-    .timetable {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-      background: var(--card);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      overflow-x: auto;
-    }
+        body.light-mode .shift-info {
+            color: var(--text-color-light);
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .controls button {
+            background-color: var(--secondary-color-dark);
+            color: var(--text-color-dark);
+            border: 2px solid var(--text-color-dark);
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
 
-    .timetable div {
-      border: 1px solid var(--cell-border);
-      padding: 12px;
-      text-align: center;
-      font-size: 0.9rem;
-    }
+        body.light-mode .controls button {
+            background-color: var(--secondary-color-light);
+            color: var(--text-color-light);
+            border: 2px solid var(--text-color-light);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .controls button:hover {
+            transform: translateY(-2px);
+            background-color: var(--hover-bg-dark);
+        }
+        
+        body.light-mode .controls button:hover {
+            background-color: var(--hover-bg-light);
+        }
 
-    .header {
-      background: var(--header-bg);
-      color: var(--header-text);
-      font-weight: bold;
-    }
+        #current-schedule {
+            text-align: center;
+            margin-bottom: 40px;
+        }
 
-    /* Updated CSS for the thin red line */
-    .time-line {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 2px;
-      background-color: #ff0000;
-      width: 100%;
-      z-index: 10;
-      transform: translateY(-50%); /* Adjust to center the line vertically */
-      transition: top 60s linear; /* Smooth movement over a minute */
-    }
+        .card {
+            background-color: var(--card-bg-dark);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
 
-    /* A new class to temporarily disable transition on load */
-    .time-line.no-transition {
-      transition: none !important;
-    }
+        body.light-mode .card {
+            background-color: var(--card-bg-light);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
 
-    /* Updated CSS for highlighting the current day only */
-    .current-day-header {
-      background: #e6e6ff;
-      color: #6366f1;
-      border: 2px solid #6366f1;
-    }
+        .status-label {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--green-text-dark);
+            margin-bottom: 5px;
+        }
+        
+        body.light-mode .status-label {
+            color: var(--green-text-light);
+        }
 
-    body.dark .current-day-header {
-      background: #e6e6ff;
-      color: #6366f1;
-    }
+        .lesson-name {
+            font-size: 1.8em;
+            font-weight: 600;
+            margin: 10px 0;
+        }
 
-    /* New CSS for highlighting the current lesson cell */
-    .current-lesson {
-      background: #d1e7dd; /* Light green for current lesson */
-      color: #155724;
-      font-weight: bold;
-    }
+        .lesson-time {
+            font-size: 1em;
+            font-style: italic;
+            color: #bdc3c7;
+        }
+        
+        body.light-mode .lesson-time {
+            color: #7f8c8d;
+        }
 
-    body.dark .current-lesson {
-      background: #28a745;
-      color: #fff;
-    }
+        #full-schedule h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-    /* Blinking effect */
-    @keyframes blink {
-      0% { box-shadow: 0 0 5px #ffeb3b; }
-      50% { box-shadow: 0 0 10px #ffeb3b; }
-      100% { box-shadow: 0 0 5px #ffeb3b; }
-    }
+        .table-container {
+            overflow-x: auto;
+            background-color: var(--secondary-color-dark);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s;
+        }
 
-    .blinking {
-      animation: blink 2s infinite;
-    }
+        body.light-mode .table-container {
+            background-color: var(--secondary-color-light);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
 
-    /* Tooltip styling */
-    .tooltip {
-      position: fixed;
-      background: #6366f1;
-      color: #fff;
-      padding: 5px 8px;
-      border-radius: 5px;
-      font-size: 0.75rem;
-      white-space: nowrap;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s ease;
-      z-index: 10;
-    }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+        }
 
-    @media (max-width: 768px) {
-      .timetable div {
-        font-size: 0.75rem;
-        padding: 8px;
-      }
-    }
-  </style>
+        th, td {
+            padding: 12px 8px;
+            border: 1px solid #7f8c8d;
+            min-width: 120px;
+        }
+
+        thead th {
+            background-color: var(--secondary-color-dark);
+            color: var(--text-color-dark);
+            font-weight: 600;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.light-mode thead th {
+            background-color: var(--secondary-color-light);
+            color: var(--text-color-light);
+        }
+
+        tr:nth-child(even) {
+            background-color: #3e566b;
+        }
+
+        body.light-mode tr:nth-child(even) {
+            background-color: #d1d9e2;
+        }
+
+        td {
+            transition: background-color 0.3s;
+        }
+
+        body.light-mode td {
+            color: var(--text-color-light);
+        }
+
+        td:hover {
+            background-color: var(--hover-bg-dark);
+        }
+
+        body.light-mode td:hover {
+            background-color: var(--hover-bg-light);
+        }
+
+        /* Highlight styles */
+        .current-lesson {
+            position: relative;
+            color: var(--highlight-text-dark);
+            font-weight: 600;
+            box-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+            transform: scale(1.02);
+            transition: transform 0.2s ease-in-out;
+            overflow: hidden;
+            z-index: 1; /* Make sure content is above the highlight */
+        }
+        
+        body.light-mode .current-lesson {
+            color: var(--highlight-text-light);
+            box-shadow: 0 0 10px rgba(241, 196, 15, 0.5);
+        }
+
+        .lesson-highlight {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%; /* Initial height */
+            background-color: var(--highlight-bg-dark);
+            z-index: -1; /* Place the highlight behind the text */
+            transition: height linear;
+        }
+        
+        body.light-mode .lesson-highlight {
+            background-color: var(--highlight-bg-light);
+        }
+
+        /* Mobile-first adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .lesson-name {
+                font-size: 1.5em;
+            }
+
+            th, td {
+                font-size: 0.8em;
+                min-width: 100px;
+            }
+
+            .table-container {
+                padding: 5px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h1 id="title"></h1>
-  <div class="controls">
-    <button id="theme-toggle">🌙 Dark</button>
-    <button id="shift-toggle">⇄</button>
-    <select id="language-select">
-      <option value="en">English 🇬🇧</option>
-      <option value="bs">Bosanski 🇧🇦</option>
-      <option value="tr">Türkçe 🇹🇷</option>
-    </select>
-  </div>
-  <h2 id="today-date"></h2>
-  <h3 id="shift-label"></h3>
-  <h3 id="shift-time"></h3>
+    <div class="container">
+        <div class="controls">
+            <button id="mode-toggle">☀️ Režim</button>
+            <button id="lang-bs">🇧🇦 BA</button>
+            <button id="lang-en">🇬🇧 EN</button>
+            <button id="lang-tr">🇹🇷 TR</button>
+        </div>
 
-  <div class="timetable-wrapper">
-      <div class="timetable" id="timetable"></div>
-      <div id="current-time-line" class="time-line no-transition"></div>
-  </div>
+        <header>
+            <h1 id="main-title">Dorian's Timetable</h1>
+            <p id="datetime-display"></p>
+            <p class="shift-info"></p>
+        </header>
+        
+        <main>
+            <section id="current-schedule">
+                <h2 id="current-title">Trenutni raspored</h2>
+                <div id="current-lesson" class="card">
+                    <p class="status-label"></p>
+                    <p class="lesson-name"></p>
+                    <p class="lesson-time"></p>
+                </div>
+            </section>
 
-  <script>
-    const translations = {
-      en: {
-        title: "Dorian's Timetable - 3B",
-        morning: "Morning Shift",
-        afternoon: "Afternoon Shift",
-        morningTime: "from 08:00 to 11:30",
-        afternoonTime: "from 14:00 to 17:30",
-        morningTimeFriday: "from 08:00 to 10:40",
-        afternoonTimeFriday: "from 14:00 to 16:40",
-        days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-        locale: "en-GB",
-        subjects: {
-          'BHS': 'BHS Language & Literature',
-          'ENG': 'English',
-          'MO': 'My Environment',
-          'MAT': 'Mathematics',
-          'MSC': 'Music',
-          'LK': 'Art',
-          'DKR': 'Society/Culture/Religion',
-          'TZO': 'Physical & Health Education',
-          'INFO': 'Computer Science'
-        }
-      },
-      bs: {
-        title: "Dorianov Raspored Časova - 3B",
-        morning: "Prva smjena",
-        afternoon: "Druga smjena",
-        morningTime: "od 08:00 do 11:30",
-        afternoonTime: "od 14:00 do 17:30",
-        morningTimeFriday: "od 08:00 do 10:40",
-        afternoonTimeFriday: "od 14:00 do 16:40",
-        days: ["Ponedjeljak", "Utorak", "Srijeda", "Četvrtak", "Petak"],
-        locale: "bs-BA",
-        subjects: {
-          'BHS': 'BHS Jezik i književnost',
-          'ENG': 'Engleski jezik',
-          'MO': 'Moja Okolina',
-          'MAT': 'Matematika',
-          'MSC': 'Muzička kultura',
-          'LK': 'Likovna kultura',
-          'DKR': 'Društvo/Kultura/Religija',
-          'TZO': 'Tjelesni i zdravstveni odgoj',
-          'INFO': 'Informatika'
-        }
-      },
-      tr: {
-        title: "Dorian'ın Ders Programı - 3B",
-        morning: "Sabahçı",
-        afternoon: "Öğlenci",
-        morningTime: "08:00 - 11:30",
-        afternoonTime: "14:00 - 17:30",
-        morningTimeFriday: "08:00 - 10:40",
-        afternoonTimeFriday: "14:00 - 16:40",
-        days: ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma"],
-        locale: "tr-TR",
-        subjects: {
-          'BHS': 'BHS Dil ve Edebiyat',
-          'ENG': 'İngilizce',
-          'MO': 'Çevrem',
-          'MAT': 'Matematik',
-          'MSC': 'Müzik',
-          'LK': 'Resim',
-          'DKR': 'Toplum/Kültür/Din',
-          'TZO': 'Beden Eğitimi',
-          'INFO': 'Bilgisayar Bilimi'
-        }
-      }
-    };
+            <section id="full-schedule">
+                <h2 id="full-title">Cijeli Sedmični Raspored</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr id="table-header">
+                                <th>Vrijeme</th>
+                                <th>Ponedjeljak</th>
+                                <th>Utorak</th>
+                                <th>Srijeda</th>
+                                <th>Četvrtak</th>
+                                <th>Petak</th>
+                            </tr>
+                        </thead>
+                        <tbody id="timetable-body">
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
 
-    const timetableData = {
-      morning: {
-        'Monday': ['ENG', 'BHS', 'MSC', 'MAT'],
-        'Tuesday': ['TZO', 'DKR', 'BHS', 'MO'],
-        'Wednesday': ['MAT', 'INFO', 'MO', 'ENG'],
-        'Thursday': ['LK', 'BHS', 'TZO', 'MSC'],
-        'Friday': ['BHS', 'MAT', 'LK']
-      },
-      afternoon: {
-        'Monday': ['ENG', 'BHS', 'MSC', 'MAT'],
-        'Tuesday': ['TZO', 'DKR', 'BHS', 'MO'],
-        'Wednesday': ['MAT', 'INFO', 'MO', 'ENG'],
-        'Thursday': ['LK', 'BHS', 'TZO', 'MSC'],
-        'Friday': ['BHS', 'MAT', 'LK']
-      }
-    };
-
-    // Define lesson times in minutes from midnight (e.g., 8:00 is 8*60 = 480)
-    const lessonTimes = {
-      morning: [
-        { start: 8 * 60, end: 8 * 60 + 45 },
-        { start: 8 * 60 + 50, end: 9 * 60 + 35 },
-        { start: 9 * 60 + 55, end: 10 * 60 + 40 },
-        { start: 10 * 60 + 45, end: 11 * 60 + 30 }
-      ],
-      afternoon: [
-        { start: 14 * 60, end: 14 * 60 + 45 },
-        { start: 14 * 60 + 50, end: 15 * 60 + 35 },
-        { start: 15 * 60 + 55, end: 16 * 60 + 40 },
-        { start: 16 * 60 + 45, end: 17 * 60 + 30 }
-      ],
-      morningFriday: [
-        { start: 8 * 60, end: 8 * 60 + 45 },
-        { start: 8 * 60 + 50, end: 9 * 60 + 35 },
-        { start: 9 * 60 + 55, end: 10 * 60 + 40 }
-      ],
-      afternoonFriday: [
-        { start: 14 * 60, end: 14 * 60 + 45 },
-        { start: 14 * 60 + 50, end: 15 * 60 + 35 },
-        { start: 15 * 60 + 55, end: 16 * 60 + 40 }
-      ]
-    };
-
-    // Reference: week of 1st September 2025 = Afternoon
-    function getShiftForWeek(date) {
-      const referenceDate = new Date(2025, 8, 1); // Sep 1, 2025
-      const oneWeek = 1000 * 60 * 60 * 24 * 7;
-      const diffWeeks = Math.floor((date - referenceDate) / oneWeek);
-      return diffWeeks % 2 === 0 ? 'afternoon' : 'morning';
-    }
-
-    function buildTimetable(shift, lang) {
-      const table = document.getElementById("timetable");
-      const tr = translations[lang];
-      const days = tr.days;
-      
-      let html = '';
-      
-      // Build header row
-      days.forEach(day => {
-        html += `<div class="header">${day}</div>`;
-      });
-
-      // Max lessons in a day
-      const maxPeriods = Math.max(...Object.values(timetableData[shift]).map(d => d.length));
-
-      for (let p = 0; p < maxPeriods; p++) {
-        // Corrected: Use the ordered `days` array to build the content rows
-        days.forEach(dayKey => {
-          const code = timetableData[shift][dayKey][p] || "";
-          const full = tr.subjects[code] || "";
-          if (full) {
-             html += `<div title="${full}">${code}</div>`;
-          } else {
-             html += `<div>${code}</div>`;
-          }
-        });
-      }
-      
-      table.innerHTML = html;
-    }
-
-    function updateHighlights(shift, lang) {
-        const today = new Date();
-        const currentDayIndex = today.getDay() - 1; // 0=Mon ... 4=Fri
-        const currentMinute = today.getHours() * 60 + today.getMinutes();
-        const timetable = document.getElementById('timetable');
-        const dayHeaders = timetable.querySelectorAll('.header');
-        const isFriday = today.getDay() === 5;
-
-        // Reset all highlights
-        dayHeaders.forEach(header => header.classList.remove('current-day-header'));
-        document.querySelectorAll('.current-lesson').forEach(cell => cell.classList.remove('current-lesson', 'blinking'));
-
-        if (currentDayIndex >= 0 && currentDayIndex <= 4) {
-          // Highlight day header
-          dayHeaders[currentDayIndex].classList.add('current-day-header');
-
-          // Find lesson
-          const lessonIndex = getLessonIndexForTime(shift, currentMinute, isFriday);
-
-          if (lessonIndex !== -1) {
-            const firstCellOfRow = dayHeaders.length + (lessonIndex * 5);
-            const currentLessonCell = timetable.children[firstCellOfRow + currentDayIndex];
-            if (currentLessonCell && currentLessonCell.textContent !== "") {
-              currentLessonCell.classList.add('current-lesson', 'blinking');
+    <script>
+        const SCHEDULES = {
+            morning: {
+                shiftName: "Prva smjena (08:00 - 11:40)",
+                days: ["Ponedjeljak", "Utorak", "Srijeda", "Četvrtak", "Petak"],
+                time_slots: [
+                    { start: "08:00", end: "08:45" },
+                    { start: "08:45", end: "08:55", type: "break", name: "Pauza" },
+                    { start: "08:55", end: "09:40" },
+                    { start: "09:40", end: "10:00", type: "break", name: "Pauza" },
+                    { start: "10:00", end: "10:45" },
+                    { start: "10:45", end: "10:55", type: "break", name: "Pauza" },
+                    { start: "10:55", end: "11:40" }
+                ],
+                lesson_names: [
+                    ["Engleski Jezik", "Tjelesni i Zdravstveni Odgoj", "Matematika", "Likovna Kultura", "BHS Jezik i Književnost"],
+                    ["BHS Jezik i Književnost", "DKR", "Informatika", "BHS Jezik i Književnost", "Matematika"],
+                    ["Muzička/Glazbena Kultura", "BHS Jezik i Književnost", "Moja Okolina", "Tjelesni i Zdravstveni Odgoj", "Likovna Kultura"],
+                    ["Matematika", "Moja Okolina", "Engleski Jezik", "Muzička/Glazbena Kultura", "-"]
+                ]
+            },
+            afternoon: {
+                shiftName: "Druga smjena (14:00 - 17:40)",
+                days: ["Ponedjeljak", "Utorak", "Srijeda", "Četvrtak", "Petak"],
+                time_slots: [
+                    { start: "14:00", end: "14:45" },
+                    { start: "14:45", end: "14:55", type: "break", name: "Pauza" },
+                    { start: "14:55", end: "15:40" },
+                    { start: "15:40", end: "16:00", type: "break", name: "Pauza" },
+                    { start: "16:00", end: "16:45" },
+                    { start: "16:45", end: "16:55", type: "break", name: "Pauza" },
+                    { start: "16:55", end: "17:40" }
+                ],
+                lesson_names: [
+                    ["Engleski Jezik", "Tjelesni i Zdravstveni Odgoj", "Matematika", "Likovna Kultura", "BHS Jezik i Književnost"],
+                    ["BHS Jezik i Književnost", "DKR", "Informatika", "BHS Jezik i Književnost", "Matematika"],
+                    ["Muzička/Glazbena Kultura", "BHS Jezik i Književnost", "Moja Okolina", "Tjelesni i Zdravstveni Odgoj", "Likovna Kultura"],
+                    ["Matematika", "Moja Okolina", "Engleski Jezik", "Muzička/Glazbena Kultura", "-"]
+                ]
             }
-          }
+        };
+
+        const TRANSLATIONS = {
+            bs: {
+                mainTitle: "Dorian's Timetable",
+                modeToggle: "☀️ Režim",
+                currentTitle: "Trenutni raspored",
+                fullTitle: "Cijeli Sedmični Raspored",
+                timeHeader: "Vrijeme",
+                days: ["Ponedjeljak", "Utorak", "Srijeda", "Četvrtak", "Petak"],
+                lessonStatus: "Trenutni Čas",
+                breakStatus: "Pauza",
+                finishedStatus: "Nastava je završila!"
+            },
+            en: {
+                mainTitle: "Dorian's Timetable",
+                modeToggle: "☀️ Mode",
+                currentTitle: "Current Schedule",
+                fullTitle: "Full Weekly Schedule",
+                timeHeader: "Time",
+                days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                lessonStatus: "Current Lesson",
+                breakStatus: "Break",
+                finishedStatus: "Classes have finished!"
+            },
+            tr: {
+                mainTitle: "Dorian's Timetable",
+                modeToggle: "☀️ Mod",
+                currentTitle: "Mevcut Ders",
+                fullTitle: "Haftalık Ders Programı",
+                timeHeader: "Saat",
+                days: ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma"],
+                lessonStatus: "Mevcut Ders",
+                breakStatus: "Tenefüs",
+                finishedStatus: "Dersler bitti!"
+            }
+        };
+        
+        const BOSNIAN_MONTHS = [
+            "januar", "februar", "mart", "april", "maj", "juni",
+            "juli", "august", "septembar", "oktobar", "novembar", "decembar"
+        ];
+
+        const SHIFT_START_DATE = new Date("2024-09-01T00:00:00");
+        let currentLang = 'bs';
+        
+        // --- SIMULATION CONFIGURATION ---
+        const isSimulationOn = false; // Set to 'true' to activate simulation
+        const SIMULATED_TIME = {
+            day: 5, // 1 for Monday, 5 for Friday (matches getDay() logic)
+            hour: 15, // 24-hour format
+            minute: 20
+        };
+
+        function getSimulatedTime(day, hour, minute) {
+            const now = new Date();
+            const currentDay = now.getDay() === 0 ? 7 : now.getDay();
+            const daysToAdd = (day - currentDay + 7) % 7;
+            now.setDate(now.getDate() + daysToAdd);
+            now.setHours(hour, minute, 0, 0);
+            return now;
         }
-    }
-    
-    // New function to determine which lesson is currently active
-    function getLessonIndexForTime(shift, currentMinute, isFriday) {
-      let periods;
-      if (isFriday) {
-        periods = (shift === "morning") ? lessonTimes.morningFriday : lessonTimes.afternoonFriday;
-      } else {
-        periods = lessonTimes[shift];
-      }
-      for (let i = 0; i < periods.length; i++) {
-        if (currentMinute >= periods[i].start && currentMinute < periods[i].end) {
-          return i;
+
+        function getShift() {
+            const today = new Date();
+            const diffTime = Math.abs(today - SHIFT_START_DATE);
+            const diffWeeks = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 7));
+            return diffWeeks % 2 === 0 ? SCHEDULES.afternoon : SCHEDULES.morning;
         }
-      }
-      return -1; // no lesson active
-    }
 
-    // Function to update the red line's position
-    function updateTimeLinePosition(shift, isFriday) {
-      const now = new Date();
-      const currentMinuteOfDay = now.getHours() * 60 + now.getMinutes();
-      const currentDayIndex = now.getDay() - 1; // 0=Mon, 1=Tue... 4=Fri
-      const lang = localStorage.getItem("lang") || "bs";
+        function updateDateTime() {
+            const now = isSimulationOn ? getSimulatedTime(SIMULATED_TIME.day, SIMULATED_TIME.hour, SIMULATED_TIME.minute) : new Date();
+            let dateStr;
 
-      const timeLine = document.getElementById('current-time-line');
-      const timetableWrapper = document.querySelector('.timetable-wrapper');
-      const timetable = document.getElementById('timetable');
-      const dayHeaders = timetable.querySelectorAll('.header');
+            if (currentLang === 'bs') {
+                const day = now.getDate();
+                const month = BOSNIAN_MONTHS[now.getMonth()];
+                const year = now.getFullYear();
+                dateStr = `${day}. ${month} ${year}.`;
+            } else {
+                const options = {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                };
+                dateStr = now.toLocaleDateString(currentLang, options);
+            }
+            
+            const timeStr = now.toLocaleTimeString(currentLang, { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            document.getElementById('datetime-display').textContent = `${dateStr}, ${timeStr}`;
+        }
+        
+        function updateTimetable() {
+            const activeShift = getShift();
+            const now = isSimulationOn ? getSimulatedTime(SIMULATED_TIME.day, SIMULATED_TIME.hour, SIMULATED_TIME.minute) : new Date();
+            const dayOfWeek = now.getDay() === 0 ? 6 : now.getDay() - 1;
+            const currentTimeInMinutes = now.getHours() * 60 + now.getMinutes();
 
-      // Determine the lesson period and start/end times
-      let lessonPeriod;
-      if (isFriday) {
-        lessonPeriod = (shift === "morning") ? lessonTimes.morningFriday : lessonTimes.afternoonFriday;
-      } else {
-        lessonPeriod = lessonTimes[shift];
-      }
-      
-      const startTime = lessonPeriod[0].start;
-      const endTime = lessonPeriod[lessonPeriod.length - 1].end;
+            let currentLesson = { name: TRANSLATIONS[currentLang].finishedStatus, time: "", status: TRANSLATIONS[currentLang].finishedStatus };
 
-      const totalShiftMinutes = endTime - startTime;
+            if (dayOfWeek >= 0 && dayOfWeek < 5) {
+                let currentTimes = activeShift.time_slots;
+                
+                for (let i = 0; i < currentTimes.length; i++) {
+                    const timeSlot = currentTimes[i];
+                    const [startHour, startMinute] = timeSlot.start.split(":").map(Number);
+                    const [endHour, endMinute] = timeSlot.end.split(":").map(Number);
+                    const startTimeInMinutes = startHour * 60 + startMinute;
+                    const endTimeInMinutes = endHour * 60 + endMinute;
 
-      // Hide the line if it's not the correct shift or outside of lesson times
-      if (currentMinuteOfDay < startTime || currentMinuteOfDay > endTime) {
-        timeLine.style.display = 'none';
-        return;
-      } else {
-        timeLine.style.display = 'block';
-      }
+                    if (currentTimeInMinutes >= startTimeInMinutes && currentTimeInMinutes < endTimeInMinutes) {
+                        if (timeSlot.type === "break") {
+                            currentLesson = {
+                                name: TRANSLATIONS[currentLang].breakStatus,
+                                time: `${timeSlot.start} - ${timeSlot.end}`,
+                                status: TRANSLATIONS[currentLang].breakStatus
+                            };
+                        } else {
+                            const lessonIndex = Math.floor(i / 2);
+                            currentLesson = {
+                                name: activeShift.lesson_names[lessonIndex][dayOfWeek],
+                                time: `${timeSlot.start} - ${timeSlot.end}`,
+                                status: TRANSLATIONS[currentLang].lessonStatus
+                            };
+                        }
+                        break;
+                    }
+                }
+            }
 
-      // Find the current day's column more reliably
-      if (currentDayIndex < 0 || currentDayIndex > 4) {
-          timeLine.style.display = 'none';
-          return;
-      }
+            document.querySelector('.shift-info').textContent = activeShift.shiftName;
+            document.querySelector('.status-label').textContent = currentLesson.status;
+            document.querySelector('.lesson-name').textContent = currentLesson.name;
+            document.querySelector('.lesson-time').textContent = currentLesson.time;
 
-      const currentDayName = translations[lang].days[currentDayIndex];
-      const dayHeader = Array.from(dayHeaders).find(header => header.textContent === currentDayName);
+            const tableBody = document.getElementById('timetable-body');
+            tableBody.innerHTML = '';
+            
+            const numLessons = activeShift.lesson_names.length;
 
-      if (!dayHeader) {
-          timeLine.style.display = 'none';
-          return;
-      }
+            for (let i = 0; i < numLessons; i++) {
+                const row = document.createElement('tr');
+                const lessonTime = activeShift.time_slots[i * 2];
+                const timeCell = document.createElement('td');
+                timeCell.textContent = `${lessonTime.start} - ${lessonTime.end}`;
+                row.appendChild(timeCell);
 
-      const leftPosition = dayHeader.offsetLeft;
-      const dayWidth = dayHeader.offsetWidth;
+                const [startHour, startMinute] = lessonTime.start.split(":").map(Number);
+                const [endHour, endMinute] = lessonTime.end.split(":").map(Number);
+                const startTimeInMinutes = startHour * 60 + startMinute;
+                const endTimeInMinutes = endHour * 60 + endMinute;
 
-      // Calculate vertical position
-      const minutesSinceStart = currentMinuteOfDay - startTime;
-      const totalTimetableHeight = timetable.clientHeight;
-      const topPositionPixels = (minutesSinceStart / totalShiftMinutes) * totalTimetableHeight;
-      
-      // Set the line's position and width relative to the wrapper
-      timeLine.style.left = `${leftPosition}px`;
-      timeLine.style.width = `${dayWidth}px`;
-      timeLine.style.top = `${timetable.offsetTop + topPositionPixels}px`;
-    }
+                for (let j = 0; j < activeShift.days.length; j++) {
+                    const lesson = activeShift.lesson_names[i][j];
+                    const cell = document.createElement('td');
+                    cell.textContent = lesson;
+                    
+                    const isCurrentLesson = (j === dayOfWeek && currentTimeInMinutes >= startTimeInMinutes && currentTimeInMinutes < endTimeInMinutes);
 
-    function render(lang) {
-      const today = new Date();
-      
-      // Get manual shift from local storage, or fall back to automatic
-      const manualShift = localStorage.getItem("manualShift");
-      let shift = manualShift || getShiftForWeek(today);
+                    if (isCurrentLesson) {
+                        cell.classList.add('current-lesson');
+                        
+                        const totalDurationInSeconds = (endTimeInMinutes - startTimeInMinutes) * 60;
+                        const elapsedSecondsInLesson = (currentTimeInMinutes - startTimeInMinutes) * 60 + now.getSeconds();
+                        const remainingPercentage = Math.max(0, 1 - (elapsedSecondsInLesson / totalDurationInSeconds)) * 100;
 
-      const tr = translations[lang];
+                        const highlight = document.createElement('div');
+                        highlight.classList.add('lesson-highlight');
+                        highlight.style.height = `${remainingPercentage}%`;
+                        highlight.style.transitionDuration = '1s';
+                        
+                        cell.appendChild(highlight);
+                    }
+                    row.appendChild(cell);
+                }
+                tableBody.appendChild(row);
+            }
+        }
 
-      // Title
-      document.getElementById("title").textContent = tr.title;
+        function setLanguage(lang) {
+            currentLang = lang;
+            const t = TRANSLATIONS[lang];
+            document.getElementById('main-title').textContent = t.mainTitle;
+            document.getElementById('current-title').textContent = t.currentTitle;
+            document.getElementById('full-title').textContent = t.fullTitle;
+            const tableHeader = document.getElementById('table-header').querySelectorAll('th');
+            tableHeader[0].textContent = t.timeHeader;
+            for (let i = 1; i < tableHeader.length; i++) {
+                tableHeader[i].textContent = t.days[i - 1];
+            }
+            document.getElementById('mode-toggle').textContent = t.modeToggle;
+            updateTimetable();
+            updateDateTime();
+        }
 
-      // Today date
-      let formattedDate;
-      if (lang === 'bs') {
-          const bsMonths = ["januar", "februar", "mart", "april", "maj", "juni", "juli", "august", "septembar", "oktobar", "novembar", "decembar"];
-          const dayIndex = today.getDay();
-          const bsDays = ["Nedjelja", "Ponedjeljak", "Utorak", "Srijeda", "Četvrtak", "Petak", "Subota"];
-          formattedDate = `${bsDays[dayIndex]}, ${today.getDate()}. ${bsMonths[today.getMonth()]} ${today.getFullYear()}`;
-      } else {
-          const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-          formattedDate = today.toLocaleDateString(tr.locale, options);
-      }
-      document.getElementById("today-date").textContent = formattedDate;
+        function toggleMode() {
+            document.body.classList.toggle('light-mode');
+            const button = document.getElementById('mode-toggle');
+            if (document.body.classList.contains('light-mode')) {
+                button.textContent = TRANSLATIONS[currentLang].modeToggle.replace('☀️', '🌙');
+            } else {
+                button.textContent = TRANSLATIONS[currentLang].modeToggle.replace('🌙', '☀️');
+            }
+        }
 
-      // Shift label + times
-      const isFriday = today.getDay() === 5;
-      if (shift === "morning") {
-        document.getElementById("shift-label").textContent = tr.morning;
-        document.getElementById("shift-time").textContent = isFriday ? tr.morningTimeFriday : tr.morningTime;
-      } else {
-        document.getElementById("shift-label").textContent = tr.afternoon;
-        document.getElementById("shift-time").textContent = isFriday ? tr.afternoonTimeFriday : tr.afternoonTime;
-      }
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('mode-toggle').addEventListener('click', toggleMode);
+            document.getElementById('lang-bs').addEventListener('click', () => setLanguage('bs'));
+            document.getElementById('lang-en').addEventListener('click', () => setLanguage('en'));
+            document.getElementById('lang-tr').addEventListener('click', () => setLanguage('tr'));
 
-      // Build table
-      buildTimetable(shift, lang);
-      
-      // Set initial position without animation
-      const isFirstLoad = !document.getElementById('current-time-line').classList.contains('no-transition'); // This is a bit of a hack, we will improve it
-      
-      const timeLine = document.getElementById('current-time-line');
-      timeLine.classList.add('no-transition');
-      updateTimeLinePosition(shift, isFriday);
-      
-      setTimeout(() => {
-          timeLine.classList.remove('no-transition');
-      }, 100);
+            setLanguage(currentLang);
+            
+            // Update the timetable every minute
+            setInterval(updateTimetable, 60000); 
+            // Update the progress bar and time display every second
+            setInterval(() => {
+                const now = isSimulationOn ? getSimulatedTime(SIMULATED_TIME.day, SIMULATED_TIME.hour, SIMULATED_TIME.minute) : new Date();
+                const dayOfWeek = now.getDay() === 0 ? 6 : now.getDay() - 1;
+                const currentTimeInMinutes = now.getHours() * 60 + now.getMinutes();
+                const activeShift = getShift();
+                
+                updateDateTime();
 
-      // Initial highlight
-      updateHighlights(shift, lang);
+                let isLessonInProgress = false;
+                
+                const allCells = document.querySelectorAll('#timetable-body td');
+                allCells.forEach(cell => {
+                    cell.classList.remove('current-lesson');
+                    const highlight = cell.querySelector('.lesson-highlight');
+                    if (highlight) {
+                        highlight.remove();
+                    }
+                });
 
-      // Set up timers to update every minute
-      setInterval(() => {
-          updateHighlights(shift, lang);
-          updateTimeLinePosition(shift, isFriday);
-      }, 60 * 1000);
-    }
+                for (let i = 0; i < activeShift.time_slots.length; i++) {
+                    const timeSlot = activeShift.time_slots[i];
+                    const [startHour, startMinute] = timeSlot.start.split(":").map(Number);
+                    const [endHour, endMinute] = timeSlot.end.split(":").map(Number);
+                    const startTimeInMinutes = startHour * 60 + startMinute;
+                    const endTimeInMinutes = endHour * 60 + endMinute;
 
-    // Theme toggle
-    const themeBtn = document.getElementById("theme-toggle");
-    themeBtn.addEventListener("click", () => {
-      document.body.classList.toggle("dark");
-      const dark = document.body.classList.contains("dark");
-      themeBtn.textContent = dark ? "☀️ Light" : "🌙 Dark";
-      localStorage.setItem("theme", dark ? "dark" : "light");
-    });
+                    if (dayOfWeek >= 0 && dayOfWeek < 5 && currentTimeInMinutes >= startTimeInMinutes && currentTimeInMinutes < endTimeInMinutes) {
+                        const lessonDurationInSeconds = (endTimeInMinutes - startTimeInMinutes) * 60;
+                        const elapsedMinutes = currentTimeInMinutes - startTimeInMinutes;
+                        const elapsedSeconds = elapsedMinutes * 60 + now.getSeconds();
+                        const remainingPercentage = (1 - (elapsedSeconds / lessonDurationInSeconds)) * 100;
+                        
+                        const tableBody = document.getElementById('timetable-body');
+                        const lessonIndex = Math.floor(i / 2);
+                        const colIndex = dayOfWeek + 1;
+                        const currentCell = tableBody.rows[lessonIndex].cells[colIndex];
+                        
+                        if (currentCell) {
+                            currentCell.classList.add('current-lesson');
+                            const highlight = document.createElement('div');
+                            highlight.classList.add('lesson-highlight');
+                            highlight.style.height = `${Math.max(0, remainingPercentage)}%`;
+                            highlight.style.transitionDuration = '1s';
+                            currentCell.appendChild(highlight);
+                        }
+                        
+                        isLessonInProgress = true;
+                        break;
+                    }
+                }
+                
+                if (!isLessonInProgress && isSimulationOn) {
+                    updateTimetable();
+                }
 
-    // Language select
-    const langSelect = document.getElementById("language-select");
-    langSelect.addEventListener("change", () => {
-      const lang = langSelect.value;
-      localStorage.setItem("lang", lang);
-      render(lang);
-    });
-
-    // Shift toggle
-    const shiftToggleBtn = document.getElementById("shift-toggle");
-    shiftToggleBtn.addEventListener("click", () => {
-        const currentShift = localStorage.getItem("manualShift") || getShiftForWeek(new Date());
-        const newShift = (currentShift === 'morning') ? 'afternoon' : 'morning';
-        localStorage.setItem('manualShift', newShift);
-        render(localStorage.getItem('lang') || 'bs');
-    });
-
-    // Init
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
-      document.body.classList.add("dark");
-      themeBtn.textContent = "☀️ Light";
-    }
-
-    const savedLang = localStorage.getItem("lang") || "bs";
-    langSelect.value = savedLang;
-    render(savedLang);
-  </script>
+            }, 1000);
+        });
+    </script>
 </body>
 </html>
