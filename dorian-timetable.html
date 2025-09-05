@@ -91,31 +91,32 @@
             margin-bottom: 20px;
         }
         
-        .controls button {
+        .controls button, .controls select {
             background-color: var(--secondary-color-dark);
             color: var(--text-color-dark);
             border: 2px solid var(--text-color-dark);
             padding: 10px 15px;
             border-radius: 20px;
+            font-family: 'Poppins', sans-serif;
             font-weight: 600;
             cursor: pointer;
             transition: background-color 0.3s, color 0.3s, transform 0.2s;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        body.light-mode .controls button {
+        body.light-mode .controls button, body.light-mode .controls select {
             background-color: var(--secondary-color-light);
             color: var(--text-color-light);
             border: 2px solid var(--text-color-light);
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
         
-        .controls button:hover {
+        .controls button:hover, .controls select:hover {
             transform: translateY(-2px);
             background-color: var(--hover-bg-dark);
         }
         
-        body.light-mode .controls button:hover {
+        body.light-mode .controls button:hover, body.light-mode .controls select:hover {
             background-color: var(--hover-bg-light);
         }
 
@@ -195,7 +196,6 @@
         th, td {
             padding: 12px 8px;
             border: 1px solid #7f8c8d;
-            /* min-width will be set in media queries */
         }
         
         thead th, #mobile-schedule thead th {
@@ -234,7 +234,6 @@
             background-color: var(--hover-bg-light);
         }
 
-        /* Highlight styles */
         .current-lesson {
             position: relative;
             color: var(--highlight-text-dark);
@@ -266,7 +265,6 @@
             background-color: var(--highlight-bg-light);
         }
 
-        /* Mobile-first adjustments */
         #mobile-schedule {
             display: none;
         }
@@ -275,23 +273,13 @@
             body {
                 padding: 10px;
             }
-            
-            h1 {
-                font-size: 1.8em;
-            }
-            
-            .lesson-name {
-                font-size: 1.5em;
-            }
-
+            h1 { font-size: 1.8em; }
+            .lesson-name { font-size: 1.5em; }
             th, td {
                 font-size: 0.8em;
-                min-width: 150px; /* Ensure columns are wide enough for content on small screens */
+                min-width: 150px; 
             }
-
-            .table-container {
-                padding: 5px;
-            }
+            .table-container { padding: 5px; }
         }
     </style>
 </head>
@@ -299,9 +287,11 @@
     <div class="container">
         <div class="controls">
             <button id="mode-toggle">☀️ Dark</button>
-            <button id="lang-bs">🇧🇦 BA</button>
-            <button id="lang-en">🇬🇧 EN</button>
-            <button id="lang-tr">🇹🇷 TR</button>
+            <select id="language-selector">
+                <option value="bs">🇧🇦 BA</option>
+                <option value="en">🇬🇧 EN</option>
+                <option value="tr">🇹🇷 TR</option>
+            </select>
             <button id="view-toggle">Prikaz sedmice</button>
         </div>
 
@@ -335,8 +325,7 @@
                                 <th>Petak</th>
                             </tr>
                         </thead>
-                        <tbody id="timetable-body">
-                        </tbody>
+                        <tbody id="timetable-body"></tbody>
                     </table>
                 </div>
             </section>
@@ -351,8 +340,7 @@
                                 <th id="mobile-day-header">Ponedjeljak</th>
                             </tr>
                         </thead>
-                        <tbody id="mobile-timetable-body">
-                        </tbody>
+                        <tbody id="mobile-timetable-body"></tbody>
                     </table>
                 </div>
             </section>
@@ -365,12 +353,9 @@
                 shiftNameKey: "morningShift",
                 shiftTimes: "(08:00 - 11:40)",
                 time_slots: [
-                    { start: "08:00", end: "08:45" },
-                    { start: "08:45", end: "08:55", type: "break", name: "Pauza" },
-                    { start: "08:55", end: "09:40" },
-                    { start: "09:40", end: "10:00", type: "break", name: "Pauza" },
-                    { start: "10:00", end: "10:45" },
-                    { start: "10:45", end: "10:55", type: "break", name: "Pauza" },
+                    { start: "08:00", end: "08:45" }, { start: "08:45", end: "08:55", type: "break", name: "Pauza" },
+                    { start: "08:55", end: "09:40" }, { start: "09:40", end: "10:00", type: "break", name: "Pauza" },
+                    { start: "10:00", end: "10:45" }, { start: "10:45", end: "10:55", type: "break", name: "Pauza" },
                     { start: "10:55", end: "11:40" }
                 ]
             },
@@ -378,21 +363,20 @@
                 shiftNameKey: "afternoonShift",
                 shiftTimes: "(14:00 - 17:40)",
                 time_slots: [
-                    { start: "14:00", end: "14:45" },
-                    { start: "14:45", end: "14:55", type: "break", name: "Pauza" },
-                    { start: "14:55", end: "15:40" },
-                    { start: "15:40", end: "16:00", type: "break", name: "Pauza" },
-                    { start: "16:00", end: "16:45" },
-                    { start: "16:45", end: "16:55", type: "break", name: "Pauza" },
+                    { start: "14:00", end: "14:45" }, { start: "14:45", end: "14:55", type: "break", name: "Pauza" },
+                    { start: "14:55", end: "15:40" }, { start: "15:40", end: "16:00", type: "break", name: "Pauza" },
+                    { start: "16:00", end: "16:45" }, { start: "16:45", end: "16:55", type: "break", name: "Pauza" },
                     { start: "16:55", end: "17:40" }
                 ]
             }
         };
 
+        // *** MODIFIED TRANSLATIONS OBJECT ***
         const TRANSLATIONS = {
             bs: {
                 mainTitle: "Dorian's Timetable",
-                modeToggle: "☀️ Dark",
+                dark: "Tamni",
+                light: "Svijetli",
                 viewToggleWeekly: "Prikaz sedmice",
                 viewToggleDaily: "Prikaz dana",
                 currentTitle: "Trenutni raspored",
@@ -414,7 +398,8 @@
             },
             en: {
                 mainTitle: "Dorian's Timetable",
-                modeToggle: "☀️ Dark",
+                dark: "Dark",
+                light: "Light",
                 viewToggleWeekly: "Weekly View",
                 viewToggleDaily: "Daily View",
                 currentTitle: "Current Schedule",
@@ -436,7 +421,8 @@
             },
             tr: {
                 mainTitle: "Dorian's Timetable",
-                modeToggle: "☀️ Dark",
+                dark: "Karanlık",
+                light: "Aydınlık",
                 viewToggleWeekly: "Haftalık Görünüm",
                 viewToggleDaily: "Günlük Görünüm",
                 currentTitle: "Mevcut Ders",
@@ -457,6 +443,7 @@
                 ]
             }
         };
+        // ************************************
         
         const BOSNIAN_MONTHS = [
             "januar", "februar", "mart", "april", "maj", "juni",
@@ -465,19 +452,14 @@
 
         const SHIFT_START_DATE = new Date("2024-09-01T00:00:00");
         let currentLang = 'bs';
-        let isWeeklyView = false; // Default to daily view on mobile, weekly on desktop
+        let isWeeklyView = false;
 
-        // --- SIMULATION CONFIGURATION ---
         const isSimulationOn = false;
-        const SIMULATED_TIME = {
-            day: 5, // 0 for Sunday, 1 for Monday, ..., 5 for Friday
-            hour: 15,
-            minute: 20
-        };
+        const SIMULATED_TIME = { day: 5, hour: 15, minute: 20 };
 
         function getSimulatedTime(day, hour, minute) {
             const now = new Date();
-            const currentDay = now.getDay() === 0 ? 6 : now.getDay() - 1; // Convert to 0-5 for Monday-Friday
+            const currentDay = now.getDay() === 0 ? 6 : now.getDay() - 1;
             const daysToAdd = (day - currentDay + 7) % 7;
             now.setDate(now.getDate() + daysToAdd);
             now.setHours(hour, minute, 0, 0);
@@ -496,18 +478,9 @@
             let dateStr;
 
             if (currentLang === 'bs') {
-                const day = now.getDate();
-                const month = BOSNIAN_MONTHS[now.getMonth()];
-                const year = now.getFullYear();
-                dateStr = `${day}. ${month} ${year}.`;
+                dateStr = `${now.getDate()}. ${BOSNIAN_MONTHS[now.getMonth()]} ${now.getFullYear()}.`;
             } else {
-                const options = {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                };
-                dateStr = now.toLocaleDateString(currentLang, options);
+                dateStr = now.toLocaleDateString(currentLang, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
             }
             
             const timeStr = now.toLocaleTimeString(currentLang, { hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -517,22 +490,19 @@
         function updateTimetable() {
             const activeShift = getShift();
             const now = isSimulationOn ? getSimulatedTime(SIMULATED_TIME.day, SIMULATED_TIME.hour, SIMULATED_TIME.minute) : new Date();
-            const dayOfWeek = now.getDay() === 0 ? 6 : now.getDay() - 1; // 0 for Monday, 4 for Friday, 5 for Saturday, 6 for Sunday
+            const dayOfWeek = now.getDay() === 0 ? 6 : now.getDay() - 1; 
             const currentTimeInMinutes = now.getHours() * 60 + now.getMinutes();
             const t = TRANSLATIONS[currentLang];
             const lessonNames = t.lessonNames;
 
-            // Update shift info with translation
             const translatedShiftName = t[activeShift.shiftNameKey];
             document.querySelector('.shift-info').textContent = `${translatedShiftName} ${activeShift.shiftTimes}`;
 
             let currentLesson = { name: t.finishedStatus, time: "", status: t.finishedStatus };
 
-            if (dayOfWeek >= 0 && dayOfWeek < 5) { // Only show current lesson for weekdays
-                let currentTimes = activeShift.time_slots;
-                
-                for (let i = 0; i < currentTimes.length; i++) {
-                    const timeSlot = currentTimes[i];
+            if (dayOfWeek >= 0 && dayOfWeek < 5) {
+                for (let i = 0; i < activeShift.time_slots.length; i++) {
+                    const timeSlot = activeShift.time_slots[i];
                     const [startHour, startMinute] = timeSlot.start.split(":").map(Number);
                     const [endHour, endMinute] = timeSlot.end.split(":").map(Number);
                     const startTimeInMinutes = startHour * 60 + startMinute;
@@ -540,19 +510,11 @@
 
                     if (currentTimeInMinutes >= startTimeInMinutes && currentTimeInMinutes < endTimeInMinutes) {
                         if (timeSlot.type === "break") {
-                            currentLesson = {
-                                name: t.breakStatus,
-                                time: `${timeSlot.start} - ${timeSlot.end}`,
-                                status: t.breakStatus
-                            };
+                            currentLesson = { name: t.breakStatus, time: `${timeSlot.start} - ${timeSlot.end}`, status: t.breakStatus };
                         } else {
-                            const lessonIndex = Math.floor(i / 2); // Assuming 2 time slots per lesson (lesson + break)
+                            const lessonIndex = Math.floor(i / 2);
                             const lessonName = lessonNames[lessonIndex][dayOfWeek] === '-' ? '' : lessonNames[lessonIndex][dayOfWeek];
-                            currentLesson = {
-                                name: lessonName,
-                                time: `${timeSlot.start} - ${timeSlot.end}`,
-                                status: t.lessonStatus
-                            };
+                            currentLesson = { name: lessonName, time: `${timeSlot.start} - ${timeSlot.end}`, status: t.lessonStatus };
                         }
                         break;
                     }
@@ -566,11 +528,9 @@
             const tableBody = document.getElementById('timetable-body');
             tableBody.innerHTML = '';
             
-            const numLessons = lessonNames.length;
-
-            for (let i = 0; i < numLessons; i++) {
+            for (let i = 0; i < lessonNames.length; i++) {
                 const row = document.createElement('tr');
-                const lessonTime = activeShift.time_slots[i * 2]; // Get the actual lesson time
+                const lessonTime = activeShift.time_slots[i * 2];
                 const timeCell = document.createElement('td');
                 timeCell.textContent = `${lessonTime.start} - ${lessonTime.end}`;
                 row.appendChild(timeCell);
@@ -580,25 +540,20 @@
                 const startTimeInMinutes = startHour * 60 + startMinute;
                 const endTimeInMinutes = endHour * 60 + endMinute;
 
-                for (let j = 0; j < t.days.length; j++) { // Loop through days (0-4 for Mon-Fri)
+                for (let j = 0; j < t.days.length; j++) {
                     const lesson = lessonNames[i][j];
                     const cell = document.createElement('td');
                     cell.textContent = lesson === '-' ? '' : lesson;
                     
-                    const isCurrentLesson = (j === dayOfWeek && currentTimeInMinutes >= startTimeInMinutes && currentTimeInMinutes < endTimeInMinutes);
-
-                    if (isCurrentLesson) {
+                    if (j === dayOfWeek && currentTimeInMinutes >= startTimeInMinutes && currentTimeInMinutes < endTimeInMinutes) {
                         cell.classList.add('current-lesson');
-                        
                         const totalDurationInSeconds = (endTimeInMinutes - startTimeInMinutes) * 60;
                         const elapsedSecondsInLesson = (currentTimeInMinutes - startTimeInMinutes) * 60 + now.getSeconds();
                         const remainingPercentage = Math.max(0, 1 - (elapsedSecondsInLesson / totalDurationInSeconds)) * 100;
-
                         const highlight = document.createElement('div');
                         highlight.classList.add('lesson-highlight');
                         highlight.style.height = `${remainingPercentage}%`;
-                        highlight.style.transitionDuration = '1s'; // Smooth transition for fill
-                        
+                        highlight.style.transitionDuration = '1s';
                         cell.appendChild(highlight);
                     }
                     row.appendChild(cell);
@@ -610,32 +565,25 @@
         function updateMobileTimetable() {
             const activeShift = getShift();
             const now = isSimulationOn ? getSimulatedTime(SIMULATED_TIME.day, SIMULATED_TIME.hour, SIMULATED_TIME.minute) : new Date();
-            const dayOfWeek = now.getDay() === 0 ? 6 : now.getDay() - 1; // 0 for Monday, 4 for Friday, 5 for Saturday, 6 for Sunday
+            const dayOfWeek = now.getDay() === 0 ? 6 : now.getDay() - 1; 
             const currentTimeInMinutes = now.getHours() * 60 + now.getMinutes();
             const t = TRANSLATIONS[currentLang];
-            const lessonNames = t.lessonNames;
             
-            const mobileTimeHeader = document.getElementById('mobile-time-header');
+            document.getElementById('mobile-time-header').textContent = t.timeHeader;
             const mobileDayHeader = document.getElementById('mobile-day-header');
             const mobileTimetableBody = document.getElementById('mobile-timetable-body');
             
-            mobileTimeHeader.textContent = t.timeHeader;
-            
-            if (dayOfWeek >= 0 && dayOfWeek < 5) { // Only show daily schedule for weekdays
+            if (dayOfWeek >= 0 && dayOfWeek < 5) {
                 mobileDayHeader.textContent = t.days[dayOfWeek];
                 mobileTimetableBody.innerHTML = '';
-
-                const numLessons = lessonNames.length;
-                for (let i = 0; i < numLessons; i++) {
+                for (let i = 0; i < t.lessonNames.length; i++) {
                     const row = document.createElement('tr');
-                    const lessonTime = activeShift.time_slots[i * 2]; // Get the actual lesson time
-                    
+                    const lessonTime = activeShift.time_slots[i * 2];
                     const timeCell = document.createElement('td');
                     timeCell.textContent = `${lessonTime.start} - ${lessonTime.end}`;
                     row.appendChild(timeCell);
-                    
                     const lessonCell = document.createElement('td');
-                    const lesson = lessonNames[i][dayOfWeek];
+                    const lesson = t.lessonNames[i][dayOfWeek];
                     lessonCell.textContent = lesson === '-' ? '' : lesson;
                     
                     const [startHour, startMinute] = lessonTime.start.split(":").map(Number);
@@ -643,46 +591,53 @@
                     const startTimeInMinutes = startHour * 60 + startMinute;
                     const endTimeInMinutes = endHour * 60 + endMinute;
 
-                    const isCurrentLesson = (currentTimeInMinutes >= startTimeInMinutes && currentTimeInMinutes < endTimeInMinutes);
-
-                    if (isCurrentLesson) {
+                    if (currentTimeInMinutes >= startTimeInMinutes && currentTimeInMinutes < endTimeInMinutes) {
                         lessonCell.classList.add('current-lesson');
                         const totalDurationInSeconds = (endTimeInMinutes - startTimeInMinutes) * 60;
                         const elapsedSecondsInLesson = (currentTimeInMinutes - startTimeInMinutes) * 60 + now.getSeconds();
                         const remainingPercentage = Math.max(0, 1 - (elapsedSecondsInLesson / totalDurationInSeconds)) * 100;
-
                         const highlight = document.createElement('div');
                         highlight.classList.add('lesson-highlight');
                         highlight.style.height = `${remainingPercentage}%`;
                         highlight.style.transitionDuration = '1s';
                         lessonCell.appendChild(highlight);
                     }
-                    
                     row.appendChild(lessonCell);
                     mobileTimetableBody.appendChild(row);
                 }
-            } else { // Weekend
-                mobileDayHeader.textContent = ''; // Clear day header for weekends
+            } else {
+                mobileDayHeader.textContent = '';
                 mobileTimetableBody.innerHTML = `<tr><td colspan="2" style="text-align: center;">${t.finishedStatus}</td></tr>`;
             }
         }
 
+        // *** NEW HELPER FUNCTION & MODIFIED FUNCTIONS ***
+        function updateModeButtonText() {
+            const button = document.getElementById('mode-toggle');
+            const t = TRANSLATIONS[currentLang];
+            if (document.body.classList.contains('light-mode')) {
+                button.textContent = `🌙 ${t.light}`;
+            } else {
+                button.textContent = `☀️ ${t.dark}`;
+            }
+        }
+        
         function setLanguage(lang) {
             currentLang = lang;
             const t = TRANSLATIONS[lang];
 
             document.getElementById('main-title').textContent = t.mainTitle;
-            document.getElementById('mode-toggle').textContent = document.body.classList.contains('light-mode') ? t.modeToggle.replace('☀️', '🌙') : t.modeToggle;
             document.getElementById('current-title').textContent = t.currentTitle;
             document.getElementById('full-title').textContent = t.fullTitle;
             document.getElementById('mobile-title').textContent = t.mobileTitle;
             
-            // Update table headers for full schedule
             const tableHeader = document.getElementById('table-header').querySelectorAll('th');
             tableHeader[0].textContent = t.timeHeader;
             for (let i = 1; i < tableHeader.length; i++) {
                 tableHeader[i].textContent = t.days[i - 1];
             }
+            
+            updateModeButtonText(); // Update mode button text
             updateViewToggleText();
             updateTimetable();
             updateMobileTimetable();
@@ -700,46 +655,30 @@
 
         function toggleMode() {
             document.body.classList.toggle('light-mode');
-            const button = document.getElementById('mode-toggle');
-            const t = TRANSLATIONS[currentLang];
-            if (document.body.classList.contains('light-mode')) {
-                button.textContent = t.modeToggle.replace('☀️', '🌙');
-            } else {
-                button.textContent = t.modeToggle.replace('🌙', '☀️');
-            }
+            updateModeButtonText(); // Update mode button text
         }
+        // ***********************************************
 
         function toggleView() {
             const fullSchedule = document.getElementById('full-schedule');
             const mobileSchedule = document.getElementById('mobile-schedule');
-            
             isWeeklyView = !isWeeklyView;
-            
-            if (isWeeklyView) {
-                fullSchedule.style.display = 'block';
-                mobileSchedule.style.display = 'none';
-            } else {
-                fullSchedule.style.display = 'none';
-                mobileSchedule.style.display = 'block';
-            }
-            
+            fullSchedule.style.display = isWeeklyView ? 'block' : 'none';
+            mobileSchedule.style.display = isWeeklyView ? 'none' : 'block';
             updateViewToggleText();
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('mode-toggle').addEventListener('click', toggleMode);
-            document.getElementById('lang-bs').addEventListener('click', () => setLanguage('bs'));
-            document.getElementById('lang-en').addEventListener('click', () => setLanguage('en'));
-            document.getElementById('lang-tr').addEventListener('click', () => setLanguage('tr'));
+            document.getElementById('language-selector').addEventListener('change', (event) => setLanguage(event.target.value));
             document.getElementById('view-toggle').addEventListener('click', toggleView);
 
-            // Set initial view based on screen width
             if (window.innerWidth <= 768) {
-                isWeeklyView = false; // Start with daily view on mobile
+                isWeeklyView = false;
                 document.getElementById('full-schedule').style.display = 'none';
                 document.getElementById('mobile-schedule').style.display = 'block';
             } else {
-                isWeeklyView = true; // Start with weekly view on desktop
+                isWeeklyView = true;
                 document.getElementById('full-schedule').style.display = 'block';
                 document.getElementById('mobile-schedule').style.display = 'none';
             }
