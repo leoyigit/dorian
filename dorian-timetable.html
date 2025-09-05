@@ -185,18 +185,18 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                text-align: center;
-                table-layout: auto; /* Changed from 'fixed' to 'auto' */
-            }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+            table-layout: fixed; /* Ensures uniform column width */
+        }
 
-            th, td {
-                padding: 12px 8px;
-                border: 1px solid #7f8c8d;
-                min-width: 120px; /* Ensures a minimum width for each cell */
-            }
+        th, td {
+            padding: 12px 8px;
+            border: 1px solid #7f8c8d;
+            min-width: 120px;
+        }
         
         thead th, #mobile-schedule thead th {
             background-color: var(--secondary-color-dark);
@@ -298,7 +298,7 @@
 <body>
     <div class="container">
         <div class="controls">
-            <button id="mode-toggle">☀️ Režim</button>
+            <button id="mode-toggle">☀️ Dark</button>
             <button id="lang-bs">🇧🇦 BA</button>
             <button id="lang-en">🇬🇧 EN</button>
             <button id="lang-tr">🇹🇷 TR</button>
@@ -390,7 +390,7 @@
         const TRANSLATIONS = {
             bs: {
                 mainTitle: "Dorian's Timetable",
-                modeToggle: "☀️ Režim",
+                modeToggle: "☀️ Dark",
                 viewToggleWeekly: "Prikaz sedmice",
                 viewToggleDaily: "Prikaz dana",
                 currentTitle: "Trenutni raspored",
@@ -403,7 +403,7 @@
                 finishedStatus: "Nastava je završila!",
                 lessonNames: [
                     ["Engleski Jezik", "Tjelesni i Zdravstveni Odgoj", "Matematika", "Likovna Kultura", "BHS Jezik i Književnost"],
-                    ["BHS Jezik i Književnost", "DKR", "Informatika", "BHS Jezik i Književnost", "Matematika"],
+                    ["BHS Jezik i Književnost", "Društvo / Kultura", "Informatika", "BHS Jezik i Književnost", "Matematika"],
                     ["Muzička/Glazbena Kultura", "BHS Jezik i Književnost", "Moja Okolina", "Tjelesni i Zdravstveni Odgoj", "Likovna Kultura"],
                     ["Matematika", "Moja Okolina", "Engleski Jezik", "Muzička/Glazbena Kultura", "-"]
                 ]
@@ -423,7 +423,7 @@
                 finishedStatus: "Classes have finished!",
                 lessonNames: [
                     ["English Language", "Physical and Health Education", "Mathematics", "Art Culture", "BHS Language and Literature"],
-                    ["BHS Language and Literature", "DKR", "Informatics", "BHS Language and Literature", "Mathematics"],
+                    ["BHS Language and Literature", "Society / Culture", "Informatics", "BHS Language and Literature", "Mathematics"],
                     ["Music Culture", "BHS Language and Literature", "My Environment", "Physical and Health Education", "Art Culture"],
                     ["Mathematics", "My Environment", "English Language", "Music Culture", "-"]
                 ]
@@ -442,9 +442,9 @@
                 breakStatus: "Tenefüs",
                 finishedStatus: "Dersler bitti!",
                 lessonNames: [
-                    ["İngilizce", "Beden Eğitimi", "Matematik", "Resim", "Bosna Dili"],
-                    ["Bosna Dili", "DKR", "Bilişim", "Bosna Dili", "Matematik"],
-                    ["Müzik", "Bosna Dili", "Çevre Bilgisi", "Beden Eğitimi", "Resim"],
+                    ["İngilizce", "Beden Eğitimi", "Matematik", "Resim", "Boşnak, Sırp ve Hırvat Dili"],
+                    ["Bosna Dili", "Toplum ve Kültür", "Bilişim", "Boşnak, Sırp ve Hırvat Dili", "Matematik"],
+                    ["Müzik", "Boşnak, Sırp ve Hırvat Dili", "Çevre Bilgisi", "Beden Eğitimi", "Resim"],
                     ["Matematik", "Çevre Bilgisi", "İngilizce", "Müzik", "-"]
                 ]
             }
