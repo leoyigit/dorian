@@ -353,27 +353,28 @@
         const SCHEDULES = {
             morning: {
                 shiftNameKey: "morningShift",
-                shiftTimes: "(08:00 - 11:40)",
+                shiftTimes: "(08:00 - 11:30)",
                 time_slots: [
-                    { start: "08:00", end: "08:45" }, { start: "08:45", end: "08:55", type: "break", name: "Pauza" },
-                    { start: "08:55", end: "09:40" }, { start: "09:40", end: "10:00", type: "break", name: "Pauza" },
-                    { start: "10:00", end: "10:45" }, { start: "10:45", end: "10:55", type: "break", name: "Pauza" },
-                    { start: "10:55", end: "11:40" }
+                    { start: "08:00", end: "08:45" },
+                    { start: "08:50", end: "09:35" },
+                    { start: "09:35", end: "09:55", type: "break", name: "VELIKI ODMOR" },
+                    { start: "09:55", end: "10:40" },
+                    { start: "10:45", end: "11:30" }
                 ]
             },
             afternoon: {
                 shiftNameKey: "afternoonShift",
-                shiftTimes: "(14:00 - 17:40)",
+                shiftTimes: "(14:00 - 17:30)",
                 time_slots: [
-                    { start: "14:00", end: "14:45" }, { start: "14:45", end: "14:55", type: "break", name: "Pauza" },
-                    { start: "14:55", end: "15:40" }, { start: "15:40", end: "16:00", type: "break", name: "Pauza" },
-                    { start: "16:00", end: "16:45" }, { start: "16:45", end: "16:55", type: "break", name: "Pauza" },
-                    { start: "16:55", end: "17:40" }
+                    { start: "14:00", end: "14:45" },
+                    { start: "14:50", end: "15:35" },
+                    { start: "15:35", end: "15:55", type: "break", name: "VELIKI ODMOR" },
+                    { start: "15:55", end: "16:40" },
+                    { start: "16:45", end: "17:30" }
                 ]
             }
         };
 
-        // *** ADDED ALBANIAN TRANSLATION OBJECT ***
         const TRANSLATIONS = {
             bs: {
                 mainTitle: "Dorian's Timetable",
@@ -387,7 +388,7 @@
                 timeHeader: "Vrijeme",
                 days: ["Ponedjeljak", "Utorak", "Srijeda", "Četvrtak", "Petak"],
                 lessonStatus: "Trenutni Čas",
-                breakStatus: "Pauza",
+                breakStatus: "Veliki Odmor",
                 finishedStatus: "Nastava je završila!",
                 morningShift: "Prva smjena",
                 afternoonShift: "Druga smjena",
@@ -411,7 +412,7 @@
                 timeHeader: "Time",
                 days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
                 lessonStatus: "Current Lesson",
-                breakStatus: "Break",
+                breakStatus: "Main Break",
                 finishedStatus: "Classes have finished!",
                 morningShift: "First shift",
                 afternoonShift: "Second shift",
@@ -435,7 +436,7 @@
                 timeHeader: "Saat",
                 days: ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma"],
                 lessonStatus: "Mevcut Ders",
-                breakStatus: "Tenefüs",
+                breakStatus: "Büyük Tenefüs",
                 finishedStatus: "Dersler bitti!",
                 morningShift: "Sabahçı",
                 afternoonShift: "Öğlenci",
@@ -459,7 +460,7 @@
                 timeHeader: "Ora",
                 days: ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì"],
                 lessonStatus: "Lezione in Corso",
-                breakStatus: "Pausa",
+                breakStatus: "Pausa Lunga",
                 finishedStatus: "Le lezioni sono finite!",
                 morningShift: "Turno Mattutino",
                 afternoonShift: "Turno Pomeridiano",
@@ -483,7 +484,7 @@
                 timeHeader: "Koha",
                 days: ["E Hënë", "E Martë", "E Mërkurë", "E Enjte", "E Premte"],
                 lessonStatus: "Ora në Vazhdim",
-                breakStatus: "Pushim",
+                breakStatus: "Pushimi i Madh",
                 finishedStatus: "Mësimi ka përfunduar!",
                 morningShift: "Ndërrimi i Paradites",
                 afternoonShift: "Ndërrimi i Pasdites",
@@ -567,9 +568,9 @@
 
                     if (currentTimeInMinutes >= startTimeInMinutes && currentTimeInMinutes < endTimeInMinutes) {
                         if (timeSlot.type === "break") {
-                            currentLesson = { name: t.breakStatus, time: `${timeSlot.start} - ${timeSlot.end}`, status: t.breakStatus };
+                            currentLesson = { name: timeSlot.name, time: `${timeSlot.start} - ${timeSlot.end}`, status: t.breakStatus };
                         } else {
-                            const lessonIndex = Math.floor(i / 2);
+                            const lessonIndex = activeShift.time_slots.filter((_, idx) => idx < i && !activeShift.time_slots[idx].type).length;
                             const lessonName = lessonNames[lessonIndex][dayOfWeek] === '-' ? '' : lessonNames[lessonIndex][dayOfWeek];
                             currentLesson = { name: lessonName, time: `${timeSlot.start} - ${timeSlot.end}`, status: t.lessonStatus };
                         }
@@ -585,9 +586,11 @@
             const tableBody = document.getElementById('timetable-body');
             tableBody.innerHTML = '';
             
-            for (let i = 0; i < lessonNames.length; i++) {
+            const lessonTimeSlots = activeShift.time_slots.filter(slot => !slot.type);
+
+            for (let i = 0; i < lessonTimeSlots.length; i++) {
                 const row = document.createElement('tr');
-                const lessonTime = activeShift.time_slots[i * 2];
+                const lessonTime = lessonTimeSlots[i];
                 const timeCell = document.createElement('td');
                 timeCell.textContent = `${lessonTime.start} - ${lessonTime.end}`;
                 row.appendChild(timeCell);
@@ -636,12 +639,16 @@
             } else { // Weekday
                 mobileDayHeader.textContent = t.days[dayOfWeek];
                 mobileTimetableBody.innerHTML = '';
-                for (let i = 0; i < t.lessonNames.length; i++) {
+                
+                const lessonTimeSlots = activeShift.time_slots.filter(slot => !slot.type);
+
+                for (let i = 0; i < lessonTimeSlots.length; i++) {
                     const row = document.createElement('tr');
-                    const lessonTime = activeShift.time_slots[i * 2];
+                    const lessonTime = lessonTimeSlots[i];
                     const timeCell = document.createElement('td');
                     timeCell.textContent = `${lessonTime.start} - ${lessonTime.end}`;
                     row.appendChild(timeCell);
+                    
                     const lessonCell = document.createElement('td');
                     const lesson = t.lessonNames[i][dayOfWeek];
                     lessonCell.textContent = lesson === '-' ? '' : lesson;
