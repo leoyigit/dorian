@@ -291,6 +291,8 @@
                 <option value="bs">🇧🇦 BA</option>
                 <option value="en">🇬🇧 EN</option>
                 <option value="tr">🇹🇷 TR</option>
+                <option value="it">🇮🇹 IT</option>
+                <option value="sq">🇦🇱 SQ</option>
             </select>
             <button id="view-toggle">Prikaz sedmice</button>
         </div>
@@ -371,7 +373,7 @@
             }
         };
 
-        // *** MODIFIED TRANSLATIONS OBJECT ***
+        // *** ADDED ALBANIAN TRANSLATION OBJECT ***
         const TRANSLATIONS = {
             bs: {
                 mainTitle: "Dorian's Timetable",
@@ -389,6 +391,7 @@
                 finishedStatus: "Nastava je završila!",
                 morningShift: "Prva smjena",
                 afternoonShift: "Druga smjena",
+                weekendMessage: "Uživajte u vikendu, pripremite se za nadolazeću sedmicu!",
                 lessonNames: [
                     ["Engleski Jezik", "Tjelesni i Zdravstveni Odgoj", "Matematika", "Likovna Kultura", "BHS Jezik i Književnost"],
                     ["BHS Jezik i Književnost", "Društvo / Kultura", "Informatika", "BHS Jezik i Književnost", "Matematika"],
@@ -412,6 +415,7 @@
                 finishedStatus: "Classes have finished!",
                 morningShift: "First shift",
                 afternoonShift: "Second shift",
+                weekendMessage: "Enjoy your weekend, get ready for the upcoming week!",
                 lessonNames: [
                     ["English Language", "Physical and Health Education", "Mathematics", "Art Culture", "BHS Language and Literature"],
                     ["BHS Language and Literature", "Society / Culture", "Informatics", "BHS Language and Literature", "Mathematics"],
@@ -435,20 +439,70 @@
                 finishedStatus: "Dersler bitti!",
                 morningShift: "Sabahçı",
                 afternoonShift: "Öğlenci",
+                weekendMessage: "Hafta sonunun tadını çıkarın, yeni haftaya hazırlanın!",
                 lessonNames: [
                     ["İngilizce", "Beden Eğitimi", "Matematik", "Resim", "Boşnak Dili ve Edebiyatı"],
                     ["Boşnak Dili ve Edebiyatı", "Toplum ve Kültür", "Bilişim", "Boşnak Dili ve Edebiyatı", "Matematik"],
                     ["Müzik", "Boşnak Dili ve Edebiyatı", "Çevre Bilgisi", "Beden Eğitimi", "Resim"],
                     ["Matematik", "Çevre Bilgisi", "İngilizce", "Müzik", "-"]
                 ]
+            },
+            it: {
+                mainTitle: "Orario di Dorian",
+                dark: "Scuro",
+                light: "Chiaro",
+                viewToggleWeekly: "Vista Settimanale",
+                viewToggleDaily: "Vista Giornaliera",
+                currentTitle: "Lezione Corrente",
+                fullTitle: "Orario Settimanale Completo",
+                mobileTitle: "Orario di Oggi",
+                timeHeader: "Ora",
+                days: ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì"],
+                lessonStatus: "Lezione in Corso",
+                breakStatus: "Pausa",
+                finishedStatus: "Le lezioni sono finite!",
+                morningShift: "Turno Mattutino",
+                afternoonShift: "Turno Pomeridiano",
+                weekendMessage: "Goditi il fine settimana, preparati per la prossima!",
+                lessonNames: [
+                    ["Lingua Inglese", "Educazione Fisica e Sanitaria", "Matematica", "Cultura Artistica", "Lingua e Letteratura BHS"],
+                    ["Lingua e Letteratura BHS", "Società / Cultura", "Informatica", "Lingua e Letteratura BHS", "Matematica"],
+                    ["Cultura Musicale", "Lingua e Letteratura BHS", "Il Mio Ambiente", "Educazione Fisica e Sanitaria", "Cultura Artistica"],
+                    ["Matematica", "Il Mio Ambiente", "Lingua Inglese", "Cultura Musicale", "-"]
+                ]
+            },
+            sq: {
+                mainTitle: "Orari i Dorianit",
+                dark: "Errët",
+                light: "Ndritshëm",
+                viewToggleWeekly: "Pamja Javore",
+                viewToggleDaily: "Pamja Ditore",
+                currentTitle: "Ora Aktuale",
+                fullTitle: "Orari i Plotë Javor",
+                mobileTitle: "Orari i Sotëm",
+                timeHeader: "Koha",
+                days: ["E Hënë", "E Martë", "E Mërkurë", "E Enjte", "E Premte"],
+                lessonStatus: "Ora në Vazhdim",
+                breakStatus: "Pushim",
+                finishedStatus: "Mësimi ka përfunduar!",
+                morningShift: "Ndërrimi i Paradites",
+                afternoonShift: "Ndërrimi i Pasdites",
+                weekendMessage: "Shijoni fundjavën, bëhuni gati për javën e ardhshme!",
+                lessonNames: [
+                    ["Gjuha Angleze", "Edukatë Fizike dhe Shëndetësore", "Matematikë", "Kulturë Artistike", "Gjuha dhe Letërsia BHS"],
+                    ["Gjuha dhe Letërsia BHS", "Shoqëri / Kulturë", "Informatikë", "Gjuha dhe Letërsia BHS", "Matematikë"],
+                    ["Kulturë Muzikore", "Gjuha dhe Letërsia BHS", "Mjedisi Im", "Edukatë Fizike dhe Shëndetësore", "Kulturë Artistike"],
+                    ["Matematikë", "Mjedisi Im", "Gjuha Angleze", "Kulturë Muzikore", "-"]
+                ]
             }
         };
-        // ************************************
         
         const BOSNIAN_MONTHS = [
             "januar", "februar", "mart", "april", "maj", "juni",
             "juli", "august", "septembar", "oktobar", "novembar", "decembar"
         ];
+        
+        const BOSNIAN_DAYS = ["Nedjelja", "Ponedjeljak", "Utorak", "Srijeda", "Četvrtak", "Petak", "Subota"];
 
         const SHIFT_START_DATE = new Date("2024-09-01T00:00:00");
         let currentLang = 'bs';
@@ -478,7 +532,8 @@
             let dateStr;
 
             if (currentLang === 'bs') {
-                dateStr = `${now.getDate()}. ${BOSNIAN_MONTHS[now.getMonth()]} ${now.getFullYear()}.`;
+                const dayName = BOSNIAN_DAYS[now.getDay()];
+                dateStr = `${dayName}, ${now.getDate()}. ${BOSNIAN_MONTHS[now.getMonth()]} ${now.getFullYear()}.`;
             } else {
                 dateStr = now.toLocaleDateString(currentLang, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
             }
@@ -490,7 +545,7 @@
         function updateTimetable() {
             const activeShift = getShift();
             const now = isSimulationOn ? getSimulatedTime(SIMULATED_TIME.day, SIMULATED_TIME.hour, SIMULATED_TIME.minute) : new Date();
-            const dayOfWeek = now.getDay() === 0 ? 6 : now.getDay() - 1; 
+            const dayOfWeek = now.getDay() === 0 ? 6 : now.getDay() - 1; // Monday=0, Sunday=6
             const currentTimeInMinutes = now.getHours() * 60 + now.getMinutes();
             const t = TRANSLATIONS[currentLang];
             const lessonNames = t.lessonNames;
@@ -500,7 +555,9 @@
 
             let currentLesson = { name: t.finishedStatus, time: "", status: t.finishedStatus };
 
-            if (dayOfWeek >= 0 && dayOfWeek < 5) {
+            if (dayOfWeek >= 5) { // Check for Saturday or Sunday first
+                currentLesson = { name: t.weekendMessage, time: "", status: "🎉" };
+            } else if (dayOfWeek >= 0 && dayOfWeek < 5) { // Weekday logic
                 for (let i = 0; i < activeShift.time_slots.length; i++) {
                     const timeSlot = activeShift.time_slots[i];
                     const [startHour, startMinute] = timeSlot.start.split(":").map(Number);
@@ -565,7 +622,7 @@
         function updateMobileTimetable() {
             const activeShift = getShift();
             const now = isSimulationOn ? getSimulatedTime(SIMULATED_TIME.day, SIMULATED_TIME.hour, SIMULATED_TIME.minute) : new Date();
-            const dayOfWeek = now.getDay() === 0 ? 6 : now.getDay() - 1; 
+            const dayOfWeek = now.getDay() === 0 ? 6 : now.getDay() - 1; // Monday=0, Sunday=6
             const currentTimeInMinutes = now.getHours() * 60 + now.getMinutes();
             const t = TRANSLATIONS[currentLang];
             
@@ -573,7 +630,10 @@
             const mobileDayHeader = document.getElementById('mobile-day-header');
             const mobileTimetableBody = document.getElementById('mobile-timetable-body');
             
-            if (dayOfWeek >= 0 && dayOfWeek < 5) {
+            if (dayOfWeek >= 5) { // Weekend
+                mobileDayHeader.textContent = '';
+                mobileTimetableBody.innerHTML = `<tr><td colspan="2" style="text-align: center;">${t.weekendMessage}</td></tr>`;
+            } else { // Weekday
                 mobileDayHeader.textContent = t.days[dayOfWeek];
                 mobileTimetableBody.innerHTML = '';
                 for (let i = 0; i < t.lessonNames.length; i++) {
@@ -605,13 +665,9 @@
                     row.appendChild(lessonCell);
                     mobileTimetableBody.appendChild(row);
                 }
-            } else {
-                mobileDayHeader.textContent = '';
-                mobileTimetableBody.innerHTML = `<tr><td colspan="2" style="text-align: center;">${t.finishedStatus}</td></tr>`;
             }
         }
 
-        // *** NEW HELPER FUNCTION & MODIFIED FUNCTIONS ***
         function updateModeButtonText() {
             const button = document.getElementById('mode-toggle');
             const t = TRANSLATIONS[currentLang];
@@ -637,7 +693,7 @@
                 tableHeader[i].textContent = t.days[i - 1];
             }
             
-            updateModeButtonText(); // Update mode button text
+            updateModeButtonText();
             updateViewToggleText();
             updateTimetable();
             updateMobileTimetable();
@@ -655,9 +711,8 @@
 
         function toggleMode() {
             document.body.classList.toggle('light-mode');
-            updateModeButtonText(); // Update mode button text
+            updateModeButtonText();
         }
-        // ***********************************************
 
         function toggleView() {
             const fullSchedule = document.getElementById('full-schedule');
