@@ -357,7 +357,7 @@
                 time_slots: [
                     { start: "08:00", end: "08:45" },
                     { start: "08:50", end: "09:35" },
-                    { start: "09:35", end: "09:55", type: "break", name: "VELIKI ODMOR" },
+                    { start: "09:35", end: "09:55", type: "break" },
                     { start: "09:55", end: "10:40" },
                     { start: "10:45", end: "11:30" }
                 ]
@@ -368,7 +368,7 @@
                 time_slots: [
                     { start: "14:00", end: "14:45" },
                     { start: "14:50", end: "15:35" },
-                    { start: "15:35", end: "15:55", type: "break", name: "VELIKI ODMOR" },
+                    { start: "15:35", end: "15:55", type: "break" },
                     { start: "15:55", end: "16:40" },
                     { start: "16:45", end: "17:30" }
                 ]
@@ -388,7 +388,8 @@
                 timeHeader: "Vrijeme",
                 days: ["Ponedjeljak", "Utorak", "Srijeda", "Četvrtak", "Petak"],
                 lessonStatus: "Trenutni Čas",
-                breakStatus: "Veliki Odmor",
+                breakName: "PAUZA ZA RUČAK",
+                breakStatus: "Pauza",
                 finishedStatus: "Nastava je završila!",
                 morningShift: "Prva smjena",
                 afternoonShift: "Druga smjena",
@@ -412,7 +413,8 @@
                 timeHeader: "Time",
                 days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
                 lessonStatus: "Current Lesson",
-                breakStatus: "Main Break",
+                breakName: "LUNCH BREAK",
+                breakStatus: "Break",
                 finishedStatus: "Classes have finished!",
                 morningShift: "First shift",
                 afternoonShift: "Second shift",
@@ -436,7 +438,8 @@
                 timeHeader: "Saat",
                 days: ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma"],
                 lessonStatus: "Mevcut Ders",
-                breakStatus: "Büyük Tenefüs",
+                breakName: "ÖĞLE YEMEĞİ MOLASI",
+                breakStatus: "Mola",
                 finishedStatus: "Dersler bitti!",
                 morningShift: "Sabahçı",
                 afternoonShift: "Öğlenci",
@@ -460,7 +463,8 @@
                 timeHeader: "Ora",
                 days: ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì"],
                 lessonStatus: "Lezione in Corso",
-                breakStatus: "Pausa Lunga",
+                breakName: "PAUSA PRANZO",
+                breakStatus: "Pausa",
                 finishedStatus: "Le lezioni sono finite!",
                 morningShift: "Turno Mattutino",
                 afternoonShift: "Turno Pomeridiano",
@@ -484,7 +488,8 @@
                 timeHeader: "Koha",
                 days: ["E Hënë", "E Martë", "E Mërkurë", "E Enjte", "E Premte"],
                 lessonStatus: "Ora në Vazhdim",
-                breakStatus: "Pushimi i Madh",
+                breakName: "PUSHIMI I DREKËS",
+                breakStatus: "Pushim",
                 finishedStatus: "Mësimi ka përfunduar!",
                 morningShift: "Ndërrimi i Paradites",
                 afternoonShift: "Ndërrimi i Pasdites",
@@ -497,7 +502,7 @@
                 ]
             }
         };
-        
+
         const BOSNIAN_MONTHS = [
             "januar", "februar", "mart", "april", "maj", "juni",
             "juli", "august", "septembar", "oktobar", "novembar", "decembar"
@@ -568,7 +573,7 @@
 
                     if (currentTimeInMinutes >= startTimeInMinutes && currentTimeInMinutes < endTimeInMinutes) {
                         if (timeSlot.type === "break") {
-                            currentLesson = { name: timeSlot.name, time: `${timeSlot.start} - ${timeSlot.end}`, status: t.breakStatus };
+                            currentLesson = { name: t.breakName, time: `${timeSlot.start} - ${timeSlot.end}`, status: t.breakStatus };
                         } else {
                             const lessonIndex = activeShift.time_slots.filter((_, idx) => idx < i && !activeShift.time_slots[idx].type).length;
                             const lessonName = lessonNames[lessonIndex][dayOfWeek] === '-' ? '' : lessonNames[lessonIndex][dayOfWeek];
@@ -684,7 +689,7 @@
                 button.textContent = `☀️ ${t.dark}`;
             }
         }
-        
+
         function setLanguage(lang) {
             currentLang = lang;
             const t = TRANSLATIONS[lang];
