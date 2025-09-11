@@ -120,9 +120,8 @@
             background-color: var(--hover-bg-light);
         }
         
-        /* Styles for the new simulation panel */
         #simulation-controls {
-            display: none; /* Hidden by default */
+            display: none;
             background-color: var(--card-bg-dark);
             padding: 20px;
             margin: 20px auto;
@@ -138,7 +137,7 @@
         }
         
         #simulation-controls.visible {
-            display: block; /* Shown when triggered */
+            display: block;
         }
 
         #simulation-controls h3 {
@@ -433,19 +432,19 @@
 
     const TRANSLATIONS = {
         bs: {
-            mainTitle: "Dorian's Timetable", dark: "Tamni", light: "Svijetli", viewToggleWeekly: "Prikaz sedmice", viewToggleDaily: "Prikaz dana", currentTitle: "Trenutni raspored", fullTitle: "Cijeli Sedmični Raspored", mobileTitle: "Današnji Raspored", timeHeader: "Vrijeme", days: ["Ponedjeljak", "Utorak", "Srijeda", "Četvrtak", "Petak"], lessonStatus: "Trenutni Čas", breakName: "PAUZA", breakStatus: "Pauza", finishedStatus: "Nastava je završila!", fridayFinishedTitle: "Nastava je završila!", fridayFinishedSubtitle: "Ugodan vikend! Ne zaboravite završiti zadaću za sljedeću sedmicu i ponoviti ono što ste naučili.", morningShift: "Prva smjena", afternoonShift: "Druga smjena", weekendMessage: "Uživajte u vikendu, pripremite se za nadolazeću sedmicu!", nextLessonIn: "Sljedeći čas za", lessonNames: [["Engleski Jezik", "Tjelesni i Zdravstveni Odgoj", "Matematika", "Likovna Kultura", "BHS Jezik i Književnost"], ["BHS Jezik i Književnost", "Društvo / Kultura", "Informatika", "BHS Jezik i Književnost", "Matematika"], ["Muzička/Glazbena Kultura", "BHS Jezik i Književnost", "Moja Okolina", "Tjelesni i Zdravstveni Odgoj", "Likovna Kultura"], ["Matematika", "Moja Okolina", "Engleski Jezik", "Muzička/Glazbena Kultura", "-"]]
+            mainTitle: "Dorian's Timetable", dark: "Tamni", light: "Svijetli", viewToggleWeekly: "Prikaz sedmice", viewToggleDaily: "Prikaz dana", currentTitle: "Trenutni raspored", fullTitle: "Cijeli Sedmični Raspored", mobileTitle: "Današnji Raspored", timeHeader: "Vrijeme", days: ["Ponedjeljak", "Utorak", "Srijeda", "Četvrtak", "Petak"], lessonStatus: "Trenutni Čas", breakName: "PAUZA", breakStatus: "Pauza", beforeSchoolStatus: "Nastava počinje uskoro", finishedStatus: "Nastava je završila!", fridayFinishedTitle: "Nastava je završila!", fridayFinishedSubtitle: "Ugodan vikend! Ne zaboravite završiti zadaću za sljedeću sedmicu i ponoviti ono što ste naučili.", morningShift: "Prva smjena", afternoonShift: "Druga smjena", weekendMessage: "Uživajte u vikendu, pripremite se za nadolazeću sedmicu!", nextLessonIn: "Sljedeći čas za", lessonNames: [["Engleski Jezik", "Tjelesni i Zdravstveni Odgoj", "Matematika", "Likovna Kultura", "BHS Jezik i Književnost"], ["BHS Jezik i Književnost", "Društvo / Kultura", "Informatika", "BHS Jezik i Književnost", "Matematika"], ["Muzička/Glazbena Kultura", "BHS Jezik i Književnost", "Moja Okolina", "Tjelesni i Zdravstveni Odgoj", "Likovna Kultura"], ["Matematika", "Moja Okolina", "Engleski Jezik", "Muzička/Glazbena Kultura", "-"]]
         },
         en: {
-            mainTitle: "Dorian's Timetable", dark: "Dark", light: "Light", viewToggleWeekly: "Weekly View", viewToggleDaily: "Daily View", currentTitle: "Current Schedule", fullTitle: "Full Weekly Schedule", mobileTitle: "Today's Schedule", timeHeader: "Time", days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], lessonStatus: "Current Lesson", breakName: "BREAK", breakStatus: "Break", finishedStatus: "Classes have finished!", fridayFinishedTitle: "Classes have finished!", fridayFinishedSubtitle: "Have a nice weekend! Don't forget to finish homework for next week and repeat what you have learned.", morningShift: "First shift", afternoonShift: "Second shift", weekendMessage: "Enjoy your weekend, get ready for the upcoming week!", nextLessonIn: "Next lesson in", lessonNames: [["English Language", "Physical and Health Education", "Mathematics", "Art Culture", "BCS Language and Literature"], ["BCS Language and Literature", "Society / Culture", "Informatics", "BCS Language and Literature", "Mathematics"], ["Music Culture", "BCS Language and Literature", "My Environment", "Physical and Health Education", "Art Culture"], ["Mathematics", "My Environment", "English Language", "Music Culture", "-"]]
+            mainTitle: "Dorian's Timetable", dark: "Dark", light: "Light", viewToggleWeekly: "Weekly View", viewToggleDaily: "Daily View", currentTitle: "Current Schedule", fullTitle: "Full Weekly Schedule", mobileTitle: "Today's Schedule", timeHeader: "Time", days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], lessonStatus: "Current Lesson", breakName: "BREAK", breakStatus: "Break", beforeSchoolStatus: "Classes start soon", finishedStatus: "Classes have finished!", fridayFinishedTitle: "Classes have finished!", fridayFinishedSubtitle: "Have a nice weekend! Don't forget to finish homework for next week and repeat what you have learned.", morningShift: "First shift", afternoonShift: "Second shift", weekendMessage: "Enjoy your weekend, get ready for the upcoming week!", nextLessonIn: "Next lesson in", lessonNames: [["English Language", "Physical and Health Education", "Mathematics", "Art Culture", "BCS Language and Literature"], ["BCS Language and Literature", "Society / Culture", "Informatics", "BCS Language and Literature", "Mathematics"], ["Music Culture", "BCS Language and Literature", "My Environment", "Physical and Health Education", "Art Culture"], ["Mathematics", "My Environment", "English Language", "Music Culture", "-"]]
         },
         tr: {
-            mainTitle: "Dorian's Timetable", dark: "Karanlık", light: "Aydınlık", viewToggleWeekly: "Haftalık Görünüm", viewToggleDaily: "Günlük Görünüm", currentTitle: "Mevcut Ders", fullTitle: "Haftalık Ders Programı", mobileTitle: "Bugünün Ders Programı", timeHeader: "Saat", days: ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma"], lessonStatus: "Mevcut Ders", breakName: "TENEFÜS", breakStatus: "Tenefüs", finishedStatus: "Dersler bitti!", fridayFinishedTitle: "Dersler bitti!", fridayFinishedSubtitle: "İyi hafta sonları! Gelecek haftanın ödevlerini bitirmeyi ve öğrendiklerinizi tekrar etmeyi unutmayın.", morningShift: "Sabahçı", afternoonShift: "Öğlenci", weekendMessage: "Hafta sonunun tadını çıkarın, yeni haftaya hazırlanın!", nextLessonIn: "Bir sonraki ders", lessonNames: [["İngilizce", "Beden Eğitimi", "Matematik", "Resim", "Boşnak Dili ve Edebiyatı"], ["Boşnak Dili ve Edebiyatı", "Toplum ve Kültür", "Bilişim", "Boşnak Dili ve Edebiyatı", "Matematika"], ["Müzik", "Boşnak Dili ve Edebiyatı", "Çevre Bilgisi", "Beden Eğitimi", "Resim"], ["Matematik", "Çevre Bilgisi", "İngilizce", "Müzik", "-"]]
+            mainTitle: "Dorian's Timetable", dark: "Karanlık", light: "Aydınlık", viewToggleWeekly: "Haftalık Görünüm", viewToggleDaily: "Günlük Görünüm", currentTitle: "Mevcut Ders", fullTitle: "Haftalık Ders Programı", mobileTitle: "Bugünün Ders Programı", timeHeader: "Saat", days: ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma"], lessonStatus: "Mevcut Ders", breakName: "TENEFÜS", breakStatus: "Tenefüs", beforeSchoolStatus: "Dersler yakında başlıyor", finishedStatus: "Dersler bitti!", fridayFinishedTitle: "Dersler bitti!", fridayFinishedSubtitle: "İyi hafta sonları! Gelecek haftanın ödevlerini bitirmeyi ve öğrendiklerinizi tekrar etmeyi unutmayın.", morningShift: "Sabahçı", afternoonShift: "Öğlenci", weekendMessage: "Hafta sonunun tadını çıkarın, yeni haftaya hazırlanın!", nextLessonIn: "Bir sonraki ders", lessonNames: [["İngilizce", "Beden Eğitimi", "Matematik", "Resim", "Boşnak Dili ve Edebiyatı"], ["Boşnak Dili ve Edebiyatı", "Toplum ve Kültür", "Bilişim", "Boşnak Dili ve Edebiyatı", "Matematika"], ["Müzik", "Boşnak Dili ve Edebiyatı", "Çevre Bilgisi", "Beden Eğitimi", "Resim"], ["Matematik", "Çevre Bilgisi", "İngilizce", "Müzik", "-"]]
         },
         it: {
-            mainTitle: "Orario di Dorian", dark: "Scuro", light: "Chiaro", viewToggleWeekly: "Vista Settimanale", viewToggleDaily: "Vista Giornaliera", currentTitle: "Lezione Corrente", fullTitle: "Orario Settimanale Completo", mobileTitle: "Orario di Oggi", timeHeader: "Ora", days: ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì"], lessonStatus: "Lezione in Corso", breakName: "PAUSA", breakStatus: "Pausa", finishedStatus: "Le lezioni sono finite!", fridayFinishedTitle: "Le lezioni sono finite!", fridayFinishedSubtitle: "Buon fine settimana! Non dimenticate di finire i compiti per la prossima settimana e di ripassare ciò che avete imparato.", morningShift: "Turno Mattutino", afternoonShift: "Turno Pomeridiano", weekendMessage: "Goditi il fine settimana, preparati per la prossima!", nextLessonIn: "Prossima lezione tra", lessonNames: [["Lingua Inglese", "Educazione Fisica e Sanitaria", "Matematica", "Cultura Artistica", "Lingua e Letteratura BHS"], ["Lingua e Letteratura BHS", "Società / Cultura", "Informatica", "Lingua e Letteratura BHS", "Matematica"], ["Cultura Musicale", "Lingua e Letteratura BHS", "Il Mio Ambiente", "Educazione Fisica e Sanitaria", "Cultura Artistica"], ["Matematica", "Il Mio Ambiente", "Lingua Inglese", "Cultura Musicale", "-"]]
+            mainTitle: "Orario di Dorian", dark: "Scuro", light: "Chiaro", viewToggleWeekly: "Vista Settimanale", viewToggleDaily: "Vista Giornaliera", currentTitle: "Lezione Corrente", fullTitle: "Orario Settimanale Completo", mobileTitle: "Orario di Oggi", timeHeader: "Ora", days: ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì"], lessonStatus: "Lezione in Corso", breakName: "PAUSA", breakStatus: "Pausa", beforeSchoolStatus: "Le lezioni iniziano a breve", finishedStatus: "Le lezioni sono finite!", fridayFinishedTitle: "Le lezioni sono finite!", fridayFinishedSubtitle: "Buon fine settimana! Non dimenticate di finire i compiti per la prossima settimana e di ripassare ciò che avete imparato.", morningShift: "Turno Mattutino", afternoonShift: "Turno Pomeridiano", weekendMessage: "Goditi il fine settimana, preparati per la prossima!", nextLessonIn: "Prossima lezione tra", lessonNames: [["Lingua Inglese", "Educazione Fisica e Sanitaria", "Matematica", "Cultura Artistica", "Lingua e Letteratura BHS"], ["Lingua e Letteratura BHS", "Società / Cultura", "Informatica", "Lingua e Letteratura BHS", "Matematica"], ["Cultura Musicale", "Lingua e Letteratura BHS", "Il Mio Ambiente", "Educazione Fisica e Sanitaria", "Cultura Artistica"], ["Matematica", "Il Mio Ambiente", "Lingua Inglese", "Cultura Musicale", "-"]]
         },
         sq: {
-            mainTitle: "Orari i Dorianit", dark: "Errët", light: "Ndritshëm", viewToggleWeekly: "Pamja Javore", viewToggleDaily: "Pamja Ditore", currentTitle: "Ora Aktuale", fullTitle: "Orari i Plotë Javor", mobileTitle: "Orari i Sotëm", timeHeader: "Koha", days: ["E Hënë", "E Martë", "E Mërkurë", "E Enjte", "E Premte"], lessonStatus: "Ora në Vazhdim", breakName: "PUSHIM", breakStatus: "Pushim", finishedStatus: "Mësimi ka përfunduar!", fridayFinishedTitle: "Mësimi ka përfunduar!", fridayFinishedSubtitle: "Fundjavë të këndshme! Mos harroni të përfundoni detyrat e shtëpisë për javën e ardhshme dhe të përsërisni atë që keni mësuar.", morningShift: "Ndërrimi i Paradites", afternoonShift: "Ndërrimi i Pasdites", weekendMessage: "Shijoni fundjavën, bëhuni gati për javën e ardhshme!", nextLessonIn: "Ora tjetër në", lessonNames: [["Gjuha Angleze", "Edukatë Fizike dhe Shëndetësore", "Matematikë", "Kulturë Artistike", "Gjuha dhe Letërsia BHS"], ["Gjuha dhe Letërsia BHS", "Shoqëri / Kulturë", "Informatikë", "Gjuha dhe Letërsia BHS", "Matematikë"], ["Kulturë Muzikore", "Gjuha dhe Letërsia BHS", "Mjedisi Im", "Edukatë Fizike dhe Shëndetësore", "Kulturë Artistike"], ["Matematikë", "Mjedisi Im", "Gjuha Angleze", "Kulturë Muzikore", "-"]]
+            mainTitle: "Orari i Dorianit", dark: "Errët", light: "Ndritshëm", viewToggleWeekly: "Pamja Javore", viewToggleDaily: "Pamja Ditore", currentTitle: "Ora Aktuale", fullTitle: "Orari i Plotë Javor", mobileTitle: "Orari i Sotëm", timeHeader: "Koha", days: ["E Hënë", "E Martë", "E Mërkurë", "E Enjte", "E Premte"], lessonStatus: "Ora në Vazhdim", breakName: "PUSHIM", breakStatus: "Pushim", beforeSchoolStatus: "Mësimi fillon së shpejti", finishedStatus: "Mësimi ka përfunduar!", fridayFinishedTitle: "Mësimi ka përfunduar!", fridayFinishedSubtitle: "Fundjavë të këndshme! Mos harroni të përfundoni detyrat e shtëpisë për javën e ardhshme dhe të përsërisni atë që keni mësuar.", morningShift: "Ndërrimi i Paradites", afternoonShift: "Ndërrimi i Pasdites", weekendMessage: "Shijoni fundjavën, bëhuni gati për javën e ardhshme!", nextLessonIn: "Ora tjetër në", lessonNames: [["Gjuha Angleze", "Edukatë Fizike dhe Shëndetësore", "Matematikë", "Kulturë Artistike", "Gjuha dhe Letërsia BHS"], ["Gjuha dhe Letërsia BHS", "Shoqëri / Kulturë", "Informatikë", "Gjuha dhe Letërsia BHS", "Matematikë"], ["Kulturë Muzikore", "Gjuha dhe Letërsia BHS", "Mjedisi Im", "Edukatë Fizike dhe Shëndetësore", "Kulturë Artistike"], ["Matematikë", "Mjedisi Im", "Gjuha Angleze", "Kulturë Muzikore", "-"]]
         }
     };
 
@@ -454,24 +453,21 @@
     const SHIFT_START_DATE = new Date("2024-09-01T00:00:00");
     let currentLang = 'bs';
     let isWeeklyView = false;
-    
-    // NEW: Variables for simulation
     let simulatedDate = null; 
 
-    // NEW: Helper function to get the correct time (real or simulated)
     function getCurrentTime() {
         return simulatedDate ? new Date(simulatedDate) : new Date();
     }
 
     function getShift() {
-        const today = getCurrentTime(); // Use helper function
+        const today = getCurrentTime();
         const diffTime = Math.abs(today - SHIFT_START_DATE);
         const diffWeeks = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 7));
         return diffWeeks % 2 === 0 ? SCHEDULES.afternoon : SCHEDULES.morning;
     }
 
     function updateDateTime() {
-        const now = getCurrentTime(); // Use helper function
+        const now = getCurrentTime();
         let dateStr;
         if (currentLang === 'bs') {
             const dayName = BOSNIAN_DAYS[now.getDay()];
@@ -491,7 +487,7 @@
 
     function updateTimetable() {
         const activeShift = getShift();
-        const now = getCurrentTime(); // Use helper function
+        const now = getCurrentTime();
         const dayOfWeek = now.getDay() === 0 ? 6 : now.getDay() - 1;
         const currentTimeInMinutes = now.getHours() * 60 + now.getMinutes();
         const t = TRANSLATIONS[currentLang];
@@ -572,14 +568,18 @@
                         const nextLessonStartTime = new Date(now);
                         nextLessonStartTime.setHours(nextStartHour, nextStartMinute, 0, 0);
                         const diffInSeconds = Math.floor((nextLessonStartTime - now) / 1000);
+                        
+                        // NEW LOGIC: Check if it's before school or a regular break
+                        const status = (nextLessonPeriodIdx === 0) ? t.beforeSchoolStatus : t.breakStatus;
+                        
                         currentLesson = {
-                            status: t.breakStatus,
+                            status: status,
                             name: nextLessonName,
                             time: `${t.nextLessonIn} ${Math.floor(diffInSeconds / 60)} min. ${diffInSeconds % 60} sec.`
                         };
                     }
                 } else {
-                    currentLesson = { status: "", name: "", time: "" };
+                    currentLesson = { status: "", name: "", time: "" }; // Fallback, should not happen often
                 }
             }
         }
@@ -698,7 +698,6 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        // --- NEW: Logic for the secret trigger ---
         const modeToggleButton = document.getElementById('mode-toggle');
         const simControls = document.getElementById('simulation-controls');
         let clickCount = 0;
@@ -706,7 +705,7 @@
         
         modeToggleButton.addEventListener('click', () => {
             const now = Date.now();
-            if (now - firstClickTime > 3000) { // More than 3 seconds passed
+            if (now - firstClickTime > 3000) {
                 clickCount = 1;
                 firstClickTime = now;
             } else {
@@ -715,29 +714,27 @@
 
             if (clickCount === 5) {
                 simControls.classList.toggle('visible');
-                clickCount = 0; // Reset after trigger
+                clickCount = 0;
             }
         });
 
-        // --- NEW: Logic for the simulation controls ---
         document.getElementById('sim-apply-btn').addEventListener('click', () => {
             const pickerValue = document.getElementById('sim-datetime-picker').value;
             if (pickerValue) {
                 simulatedDate = new Date(pickerValue);
                 forceUpdateAll();
-                if (mainInterval) clearInterval(mainInterval); // Stop real-time updates
+                if (mainInterval) clearInterval(mainInterval);
             }
         });
 
         document.getElementById('sim-reset-btn').addEventListener('click', () => {
             simulatedDate = null;
             document.getElementById('sim-datetime-picker').value = '';
-            if (mainInterval) clearInterval(mainInterval); // Clear old interval just in case
-            mainInterval = setInterval(forceUpdateAll, 1000); // Restart real-time updates
+            if (mainInterval) clearInterval(mainInterval);
+            mainInterval = setInterval(forceUpdateAll, 1000);
             forceUpdateAll();
         });
         
-        // --- Original Listeners ---
         document.getElementById('language-selector').addEventListener('change', (event) => setLanguage(event.target.value));
         document.getElementById('view-toggle').addEventListener('click', toggleView);
 
