@@ -59,6 +59,7 @@
             font-size: 2em;
             font-weight: 600;
             color: var(--text-color-dark);
+            /* cursor: pointer; // Removed to make the Easter Egg less obvious */
         }
 
         body.light-mode h1 {
@@ -138,11 +139,6 @@
         
         #simulation-controls.visible {
             display: block;
-        }
-
-        #simulation-controls h3 {
-            margin-top: 0;
-            margin-bottom: 15px;
         }
 
         #simulation-controls input, #simulation-controls button {
@@ -432,23 +428,28 @@
 
     const TRANSLATIONS = {
         bs: {
-            mainTitle: "Dorian's Timetable", dark: "Tamni", light: "Svijetli", viewToggleWeekly: "Prikaz sedmice", viewToggleDaily: "Prikaz dana", currentTitle: "Trenutni raspored", fullTitle: "Cijeli Sedmični Raspored", mobileTitle: "Današnji Raspored", timeHeader: "Vrijeme", days: ["Ponedjeljak", "Utorak", "Srijeda", "Četvrtak", "Petak"], lessonStatus: "Trenutni Čas", breakName: "PAUZA", breakStatus: "Pauza", beforeSchoolStatus: "Nastava počinje uskoro", finishedStatus: "Nastava je završila!", fridayFinishedTitle: "Nastava je završila!", fridayFinishedSubtitle: "Ugodan vikend! Ne zaboravite završiti zadaću za sljedeću sedmicu i ponoviti ono što ste naučili.", morningShift: "Prva smjena", afternoonShift: "Druga smjena", weekendMessage: "Uživajte u vikendu, pripremite se za nadolazeću sedmicu!", nextLessonIn: "Sljedeći čas za", lessonNames: [["Engleski Jezik", "Tjelesni i Zdravstveni Odgoj", "Matematika", "Likovna Kultura", "BHS Jezik i Književnost"], ["BHS Jezik i Književnost", "Društvo / Kultura", "Informatika", "BHS Jezik i Književnost", "Matematika"], ["Muzička/Glazbena Kultura", "BHS Jezik i Književnost", "Moja Okolina", "Tjelesni i Zdravstveni Odgoj", "Likovna Kultura"], ["Matematika", "Moja Okolina", "Engleski Jezik", "Muzička/Glazbena Kultura", "-"]]
+            mainTitle: "Dorian's Timetable", dark: "Tamni", light: "Svijetli", viewToggleWeekly: "Prikaz sedmice", viewToggleDaily: "Prikaz dana", currentTitle: "Trenutni raspored", fullTitle: "Cijeli Sedmični Raspored", mobileTitle: "Današnji Raspored", timeHeader: "Vrijeme", days: ["Ponedjeljak", "Utorak", "Srijeda", "Četvrtak", "Petak"], lessonStatus: "Trenutni Čas", breakName: "PAUZA", breakStatus: "Pauza", beforeSchoolStatus: "Nastava počinje uskoro", finishedStatus: "Nastava je završila!", fridayFinishedTitle: "Nastava je završila!", fridayFinishedSubtitle: "Ugodan vikend! Ne zaboravite završiti zadaću za sljedeću sedmicu i ponoviti ono što ste naučili.", morningShift: "Prva smjena", afternoonShift: "Druga smjena", weekendMessage: "Uživajte u vikendu, pripremite se za nadolazeću sedmicu!", nextLessonIn: "Sljedeći čas za", weekendPreviewTitle: "Sedmica je gotova!", weekendPreviewSubtitle: "Sljedeće sedmice nastava je u", lessonNames: [["Engleski Jezik", "Tjelesni i Zdravstveni Odgoj", "Matematika", "Likovna Kultura", "BHS Jezik i Književnost"], ["BHS Jezik i Književnost", "Društvo / Kultura", "Informatika", "BHS Jezik i Književnost", "Matematika"], ["Muzička/Glazbena Kultura", "BHS Jezik i Književnost", "Moja Okolina", "Tjelesni i Zdravstveni Odgoj", "Likovna Kultura"], ["Matematika", "Moja Okolina", "Engleski Jezik", "Muzička/Glazbena Kultura", "-"]]
         },
         en: {
-            mainTitle: "Dorian's Timetable", dark: "Dark", light: "Light", viewToggleWeekly: "Weekly View", viewToggleDaily: "Daily View", currentTitle: "Current Schedule", fullTitle: "Full Weekly Schedule", mobileTitle: "Today's Schedule", timeHeader: "Time", days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], lessonStatus: "Current Lesson", breakName: "BREAK", breakStatus: "Break", beforeSchoolStatus: "Classes start soon", finishedStatus: "Classes have finished!", fridayFinishedTitle: "Classes have finished!", fridayFinishedSubtitle: "Have a nice weekend! Don't forget to finish homework for next week and repeat what you have learned.", morningShift: "First shift", afternoonShift: "Second shift", weekendMessage: "Enjoy your weekend, get ready for the upcoming week!", nextLessonIn: "Next lesson in", lessonNames: [["English Language", "Physical and Health Education", "Mathematics", "Art Culture", "BCS Language and Literature"], ["BCS Language and Literature", "Society / Culture", "Informatics", "BCS Language and Literature", "Mathematics"], ["Music Culture", "BCS Language and Literature", "My Environment", "Physical and Health Education", "Art Culture"], ["Mathematics", "My Environment", "English Language", "Music Culture", "-"]]
+            mainTitle: "Dorian's Timetable", dark: "Dark", light: "Light", viewToggleWeekly: "Weekly View", viewToggleDaily: "Daily View", currentTitle: "Current Schedule", fullTitle: "Full Weekly Schedule", mobileTitle: "Today's Schedule", timeHeader: "Time", days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], lessonStatus: "Current Lesson", breakName: "BREAK", breakStatus: "Break", beforeSchoolStatus: "Classes start soon", finishedStatus: "Classes have finished!", fridayFinishedTitle: "Classes have finished!", fridayFinishedSubtitle: "Have a nice weekend! Don't forget to finish homework for next week and repeat what you have learned.", morningShift: "First shift", afternoonShift: "Second shift", weekendMessage: "Enjoy your weekend, get ready for the upcoming week!", nextLessonIn: "Next lesson in", weekendPreviewTitle: "The week is over!", weekendPreviewSubtitle: "Next week's classes are in the", lessonNames: [["English Language", "Physical and Health Education", "Mathematics", "Art Culture", "BCS Language and Literature"], ["BCS Language and Literature", "Society / Culture", "Informatics", "BCS Language and Literature", "Mathematics"], ["Music Culture", "BCS Language and Literature", "My Environment", "Physical and Health Education", "Art Culture"], ["Mathematics", "My Environment", "English Language", "Music Culture", "-"]]
         },
         tr: {
-            mainTitle: "Dorian's Timetable", dark: "Karanlık", light: "Aydınlık", viewToggleWeekly: "Haftalık Görünüm", viewToggleDaily: "Günlük Görünüm", currentTitle: "Mevcut Ders", fullTitle: "Haftalık Ders Programı", mobileTitle: "Bugünün Ders Programı", timeHeader: "Saat", days: ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma"], lessonStatus: "Mevcut Ders", breakName: "TENEFÜS", breakStatus: "Tenefüs", beforeSchoolStatus: "Dersler yakında başlıyor", finishedStatus: "Dersler bitti!", fridayFinishedTitle: "Dersler bitti!", fridayFinishedSubtitle: "İyi hafta sonları! Gelecek haftanın ödevlerini bitirmeyi ve öğrendiklerinizi tekrar etmeyi unutmayın.", morningShift: "Sabahçı", afternoonShift: "Öğlenci", weekendMessage: "Hafta sonunun tadını çıkarın, yeni haftaya hazırlanın!", nextLessonIn: "Bir sonraki ders", lessonNames: [["İngilizce", "Beden Eğitimi", "Matematik", "Resim", "Boşnak Dili ve Edebiyatı"], ["Boşnak Dili ve Edebiyatı", "Toplum ve Kültür", "Bilişim", "Boşnak Dili ve Edebiyatı", "Matematika"], ["Müzik", "Boşnak Dili ve Edebiyatı", "Çevre Bilgisi", "Beden Eğitimi", "Resim"], ["Matematik", "Çevre Bilgisi", "İngilizce", "Müzik", "-"]]
+            mainTitle: "Dorian's Timetable", dark: "Karanlık", light: "Aydınlık", viewToggleWeekly: "Haftalık Görünüm", viewToggleDaily: "Günlük Görünüm", currentTitle: "Mevcut Ders", fullTitle: "Haftalık Ders Programı", mobileTitle: "Bugünün Ders Programı", timeHeader: "Saat", days: ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma"], lessonStatus: "Mevcut Ders", breakName: "TENEFÜS", breakStatus: "Tenefüs", beforeSchoolStatus: "Dersler yakında başlıyor", finishedStatus: "Dersler bitti!", fridayFinishedTitle: "Dersler bitti!", fridayFinishedSubtitle: "İyi hafta sonları! Gelecek haftanın ödevlerini bitirmeyi ve öğrendiklerinizi tekrar etmeyi unutmayın.", morningShift: "Sabahçı", afternoonShift: "Öğlenci", weekendMessage: "Hafta sonunun tadını çıkarın, yeni haftaya hazırlanın!", nextLessonIn: "Bir sonraki ders", weekendPreviewTitle: "Hafta bitti!", weekendPreviewSubtitle: "Gelecek haftaki dersler",
+            // --- ADDED THESE TWO NEW LINES FOR CORRECT TURKISH GRAMMAR ---
+            previewShiftMorning: "Gelecek hafta dersler sabah.",
+            previewShiftAfternoon: "Gelecek hafta dersler öğleden sonra.",
+            // --- END OF NEW LINES ---
+            lessonNames: [["İngilizce", "Beden Eğitimi", "Matematik", "Resim", "Boşnak Dili ve Edebiyatı"], ["Boşnak Dili ve Edebiyatı", "Toplum ve Kültür", "Bilişim", "Boşnak Dili ve Edebiyatı", "Matematika"], ["Müzik", "Boşnak Dili ve Edebiyatı", "Çevre Bilgisi", "Beden Eğitimi", "Resim"], ["Matematik", "Çevre Bilgisi", "İngilizce", "Müzik", "-"]]
         },
         it: {
-            mainTitle: "Orario di Dorian", dark: "Scuro", light: "Chiaro", viewToggleWeekly: "Vista Settimanale", viewToggleDaily: "Vista Giornaliera", currentTitle: "Lezione Corrente", fullTitle: "Orario Settimanale Completo", mobileTitle: "Orario di Oggi", timeHeader: "Ora", days: ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì"], lessonStatus: "Lezione in Corso", breakName: "PAUSA", breakStatus: "Pausa", beforeSchoolStatus: "Le lezioni iniziano a breve", finishedStatus: "Le lezioni sono finite!", fridayFinishedTitle: "Le lezioni sono finite!", fridayFinishedSubtitle: "Buon fine settimana! Non dimenticate di finire i compiti per la prossima settimana e di ripassare ciò che avete imparato.", morningShift: "Turno Mattutino", afternoonShift: "Turno Pomeridiano", weekendMessage: "Goditi il fine settimana, preparati per la prossima!", nextLessonIn: "Prossima lezione tra", lessonNames: [["Lingua Inglese", "Educazione Fisica e Sanitaria", "Matematica", "Cultura Artistica", "Lingua e Letteratura BHS"], ["Lingua e Letteratura BHS", "Società / Cultura", "Informatica", "Lingua e Letteratura BHS", "Matematica"], ["Cultura Musicale", "Lingua e Letteratura BHS", "Il Mio Ambiente", "Educazione Fisica e Sanitaria", "Cultura Artistica"], ["Matematica", "Il Mio Ambiente", "Lingua Inglese", "Cultura Musicale", "-"]]
+            mainTitle: "Orario di Dorian", dark: "Scuro", light: "Chiaro", viewToggleWeekly: "Vista Settimanale", viewToggleDaily: "Vista Giornaliera", currentTitle: "Lezione Corrente", fullTitle: "Orario Settimanale Completo", mobileTitle: "Orario di Oggi", timeHeader: "Ora", days: ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì"], lessonStatus: "Lezione in Corso", breakName: "PAUSA", breakStatus: "Pausa", beforeSchoolStatus: "Le lezioni iniziano a breve", finishedStatus: "Le lezioni sono finite!", fridayFinishedTitle: "Le lezioni sono finite!", fridayFinishedSubtitle: "Buon fine settimana! Non dimenticate di finire i compiti per la prossima settimana e di ripassare ciò che avete imparato.", morningShift: "Turno Mattutino", afternoonShift: "Turno Pomeridiano", weekendMessage: "Goditi il fine settimana, preparati per la prossima!", nextLessonIn: "Prossima lezione tra", weekendPreviewTitle: "La settimana è finita!", weekendPreviewSubtitle: "Le lezioni della prossima settimana sono nel", lessonNames: [["Lingua Inglese", "Educazione Fisica e Sanitaria", "Matematica", "Cultura Artistica", "Lingua e Letteratura BHS"], ["Lingua e Letteratura BHS", "Società / Cultura", "Informatica", "Lingua e Letteratura BHS", "Matematica"], ["Cultura Musicale", "Lingua e Letteratura BHS", "Il Mio Ambiente", "Educazione Fisica e Sanitaria", "Cultura Artistica"], ["Matematica", "Il Mio Ambiente", "Lingua Inglese", "Cultura Musicale", "-"]]
         },
         sq: {
-            mainTitle: "Orari i Dorianit", dark: "Errët", light: "Ndritshëm", viewToggleWeekly: "Pamja Javore", viewToggleDaily: "Pamja Ditore", currentTitle: "Ora Aktuale", fullTitle: "Orari i Plotë Javor", mobileTitle: "Orari i Sotëm", timeHeader: "Koha", days: ["E Hënë", "E Martë", "E Mërkurë", "E Enjte", "E Premte"], lessonStatus: "Ora në Vazhdim", breakName: "PUSHIM", breakStatus: "Pushim", beforeSchoolStatus: "Mësimi fillon së shpejti", finishedStatus: "Mësimi ka përfunduar!", fridayFinishedTitle: "Mësimi ka përfunduar!", fridayFinishedSubtitle: "Fundjavë të këndshme! Mos harroni të përfundoni detyrat e shtëpisë për javën e ardhshme dhe të përsërisni atë që keni mësuar.", morningShift: "Ndërrimi i Paradites", afternoonShift: "Ndërrimi i Pasdites", weekendMessage: "Shijoni fundjavën, bëhuni gati për javën e ardhshme!", nextLessonIn: "Ora tjetër në", lessonNames: [["Gjuha Angleze", "Edukatë Fizike dhe Shëndetësore", "Matematikë", "Kulturë Artistike", "Gjuha dhe Letërsia BHS"], ["Gjuha dhe Letërsia BHS", "Shoqëri / Kulturë", "Informatikë", "Gjuha dhe Letërsia BHS", "Matematikë"], ["Kulturë Muzikore", "Gjuha dhe Letërsia BHS", "Mjedisi Im", "Edukatë Fizike dhe Shëndetësore", "Kulturë Artistike"], ["Matematikë", "Mjedisi Im", "Gjuha Angleze", "Kulturë Muzikore", "-"]]
+            mainTitle: "Orari i Dorianit", dark: "Errët", light: "Ndritshëm", viewToggleWeekly: "Pamja Javore", viewToggleDaily: "Pamja Ditore", currentTitle: "Ora Aktuale", fullTitle: "Orari i Plotë Javor", mobileTitle: "Orari i Sotëm", timeHeader: "Koha", days: ["E Hënë", "E Martë", "E Mërkurë", "E Enjte", "E Premte"], lessonStatus: "Ora në Vazhdim", breakName: "PUSHIM", breakStatus: "Pushim", beforeSchoolStatus: "Mësimi fillon së shpejti", finishedStatus: "Mësimi ka përfunduar!", fridayFinishedTitle: "Mësimi ka përfunduar!", fridayFinishedSubtitle: "Fundjavë të këndshme! Mos harroni të përfundoni detyrat e shtëpisë për javën e ardhshme dhe të përsërisni atë që keni mësuar.", morningShift: "Ndërrimi i Paradites", afternoonShift: "Ndërrimi i Pasdites", weekendMessage: "Shijoni fundjavën, bëhuni gati për javën e ardhshme!", nextLessonIn: "Ora tjetër në", weekendPreviewTitle: "Java ka mbaruar!", weekendPreviewSubtitle: "Orët e javës së ardhshme janë në", lessonNames: [["Gjuha Angleze", "Edukatë Fizike dhe Shëndetësore", "Matematikë", "Kulturë Artistike", "Gjuha dhe Letërsia BHS"], ["Gjuha dhe Letërsia BHS", "Shoqëri / Kulturë", "Informatikë", "Gjuha dhe Letërsia BHS", "Matematikë"], ["Kulturë Muzikore", "Gjuha dhe Letërsia BHS", "Mjedisi Im", "Edukatë Fizike dhe Shëndetësore", "Kulturë Artistike"], ["Matematikë", "Mjedisi Im", "Gjuha Angleze", "Kulturë Muzikore", "-"]]
         }
     };
 
-    const BOSNIAN_MONTHS = [ "januar", "februar", "mart", "april", "maj", "juni", "juli", "august", "septembar", "oktobar", "novembar", "decembar" ];
+    const BOSNIAN_MONTHS = [ "januar", "februar", "mart", "april", "maj", "juni", "juli", "august", "septembar", "okobar", "novembar", "decembar" ];
     const BOSNIAN_DAYS = ["Nedjelja", "Ponedjeljak", "Utorak", "Srijeda", "Četvrtak", "Petak", "Subota"];
     const SHIFT_START_DATE = new Date("2024-09-01T00:00:00");
     let currentLang = 'bs';
@@ -458,9 +459,37 @@
     function getCurrentTime() {
         return simulatedDate ? new Date(simulatedDate) : new Date();
     }
+    
+    function getEffectiveDisplayInfo() {
+        const now = getCurrentTime();
+        
+        const currentShift = getShift(now);
+        const lastSlot = currentShift.time_slots[currentShift.time_slots.length - 1];
+        const [endHour, endMinute] = lastSlot.end.split(':').map(Number);
+        const endOfDayMinutes = endHour * 60 + endMinute;
 
-    function getShift() {
-        const today = getCurrentTime();
+        const dayOfWeek = now.getDay(); 
+        const currentTimeInMinutes = now.getHours() * 60 + now.getMinutes();
+        
+        const isWeekOver = 
+            (dayOfWeek === 5 && currentTimeInMinutes >= endOfDayMinutes) || 
+            dayOfWeek === 6 || 
+            dayOfWeek === 0;   
+
+        if (isWeekOver) {
+            const nextMonday = new Date(now);
+            const daysToAdd = (8 - dayOfWeek) % 7;
+            nextMonday.setDate(now.getDate() + (daysToAdd === 0 ? 7 : daysToAdd) );
+            nextMonday.setHours(8, 0, 0, 0); 
+            return { dateForShift: nextMonday, isPreview: true };
+        }
+
+        return { dateForShift: now, isPreview: false };
+    }
+
+
+    function getShift(date) { 
+        const today = date || getCurrentTime(); 
         const diffTime = Math.abs(today - SHIFT_START_DATE);
         const diffWeeks = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 7));
         return diffWeeks % 2 === 0 ? SCHEDULES.afternoon : SCHEDULES.morning;
@@ -486,8 +515,9 @@
     }
 
     function updateTimetable() {
-        const activeShift = getShift();
-        const now = getCurrentTime();
+        const { dateForShift, isPreview } = getEffectiveDisplayInfo();
+        const activeShift = getShift(dateForShift);
+        const now = getCurrentTime(); 
         const dayOfWeek = now.getDay() === 0 ? 6 : now.getDay() - 1;
         const currentTimeInMinutes = now.getHours() * 60 + now.getMinutes();
         const t = TRANSLATIONS[currentLang];
@@ -495,95 +525,105 @@
         document.querySelector('.shift-info').textContent = `${t[activeShift.shiftNameKey]} ${activeShift.shiftTimes}`;
         let currentLesson = null;
         
-        const dailySchedule = t.lessonNames.map(dayLessons => dayLessons[dayOfWeek]);
-        const lastLessonPeriodIndex = dailySchedule.findLastIndex(lesson => lesson !== '-');
-        let endOfLessonsTimeInMinutes = 0;
-        if (lastLessonPeriodIndex !== -1) {
-            const lessonTimeSlots = activeShift.time_slots.filter(s => !s.type);
-            const lastLessonTimeSlot = lessonTimeSlots[lastLessonPeriodIndex];
-            if(lastLessonTimeSlot) {
-                const [endHour, endMinute] = lastLessonTimeSlot.end.split(':').map(Number);
-                endOfLessonsTimeInMinutes = endHour * 60 + endMinute;
+        if (isPreview) {
+            // --- UPDATED LOGIC FOR TURKISH TRANSLATION ---
+            let lessonName = `${t.weekendPreviewSubtitle} ${t[activeShift.shiftNameKey].toLowerCase()}`; // Default
+            if (currentLang === 'tr') {
+                // For Turkish, use the new complete sentences
+                const previewKey = activeShift.shiftNameKey === 'morningShift' ? 'previewShiftMorning' : 'previewShiftAfternoon';
+                lessonName = t[previewKey];
             }
-        }
-
-        if (dayOfWeek >= 5) {
-            currentLesson = { status: "🎉", name: t.weekendMessage, time: "" };
-        } else if (dayOfWeek === 4 && endOfLessonsTimeInMinutes > 0 && currentTimeInMinutes >= endOfLessonsTimeInMinutes) {
-            currentLesson = { status: "🎉", name: t.fridayFinishedTitle, time: t.fridayFinishedSubtitle };
+            currentLesson = {
+                status: t.weekendPreviewTitle,
+                name: lessonName,
+                time: t.weekendMessage
+            };
             document.querySelector('.lesson-time').classList.add('weekend-message');
-        } else if (endOfLessonsTimeInMinutes > 0 && currentTimeInMinutes >= endOfLessonsTimeInMinutes) {
-            currentLesson = { status: t.finishedStatus, name: t.finishedStatus, time: "" };
         } else {
-            document.querySelector('.lesson-time').classList.remove('weekend-message');
-            for (let i = 0; i < activeShift.time_slots.length; i++) {
-                const timeSlot = activeShift.time_slots[i];
-                const [startHour, startMinute] = timeSlot.start.split(":").map(Number);
-                const startTimeInMinutes = startHour * 60 + startMinute;
-                const [endHour, endMinute] = timeSlot.end.split(":").map(Number);
-                const endTimeInMinutes = endHour * 60 + endMinute;
+             document.querySelector('.lesson-time').classList.remove('weekend-message');
+            if (dayOfWeek >= 5) {
+                currentLesson = { status: "🎉", name: t.weekendMessage, time: "" };
+            } else {
+                let foundLesson = false;
+                for (let i = 0; i < activeShift.time_slots.length; i++) {
+                    const timeSlot = activeShift.time_slots[i];
+                    const [startHour, startMinute] = timeSlot.start.split(":").map(Number);
+                    const startTimeInMinutes = startHour * 60 + startMinute;
+                    const [endHour, endMinute] = timeSlot.end.split(":").map(Number);
+                    const endTimeInMinutes = endHour * 60 + endMinute;
 
-                if (currentTimeInMinutes >= startTimeInMinutes && currentTimeInMinutes < endTimeInMinutes) {
-                    if (timeSlot.type === "break") {
-                        const nextLessonIndex = activeShift.time_slots.findIndex((slot, idx) => idx > i && !slot.type);
-                        if (nextLessonIndex !== -1) {
-                            const nextLessonSlot = activeShift.time_slots[nextLessonIndex];
-                            const nextLessonPeriodIdx = activeShift.time_slots.filter((_, idx) => idx < nextLessonIndex && !activeShift.time_slots[idx].type).length;
-                            const nextLessonName = t.lessonNames[nextLessonPeriodIdx][dayOfWeek];
-                            if (nextLessonName === '-') {
-                                 currentLesson = { status: t.finishedStatus, name: t.finishedStatus, time: "" };
+                    if (currentTimeInMinutes >= startTimeInMinutes && currentTimeInMinutes < endTimeInMinutes) {
+                        foundLesson = true;
+                        if (timeSlot.type === "break") {
+                            const nextLessonIndex = activeShift.time_slots.findIndex((slot, idx) => idx > i && !slot.type);
+                            if (nextLessonIndex !== -1) {
+                                const nextLessonSlot = activeShift.time_slots[nextLessonIndex];
+                                const nextLessonPeriodIdx = activeShift.time_slots.filter((_, idx) => idx < nextLessonIndex && !activeShift.time_slots[idx].type).length;
+                                const nextLessonName = t.lessonNames[nextLessonPeriodIdx][dayOfWeek];
+                                if (nextLessonName === '-') {
+                                    currentLesson = { status: t.finishedStatus, name: t.finishedStatus, time: "" };
+                                } else {
+                                    const [nextStartHour, nextStartMinute] = nextLessonSlot.start.split(":").map(Number);
+                                    const nextLessonStartTime = new Date(now);
+                                    nextLessonStartTime.setHours(nextStartHour, nextStartMinute, 0, 0);
+                                    const diffInSeconds = Math.floor((nextLessonStartTime - now) / 1000);
+                                    currentLesson = { 
+                                        status: t.breakStatus,
+                                        name: nextLessonName, 
+                                        time: `${t.nextLessonIn} ${Math.floor(diffInSeconds / 60)} min. ${diffInSeconds % 60} sec.`
+                                    };
+                                }
                             } else {
-                                const [nextStartHour, nextStartMinute] = nextLessonSlot.start.split(":").map(Number);
-                                const nextLessonStartTime = new Date(now);
-                                nextLessonStartTime.setHours(nextStartHour, nextStartMinute, 0, 0);
-                                const diffInSeconds = Math.floor((nextLessonStartTime - now) / 1000);
-                                currentLesson = { 
-                                    status: t.breakStatus,
-                                    name: nextLessonName, 
-                                    time: `${t.nextLessonIn} ${Math.floor(diffInSeconds / 60)} min. ${diffInSeconds % 60} sec.`
-                                };
+                                currentLesson = { status: t.finishedStatus, name: t.finishedStatus, time: "" };
                             }
+                        } else {
+                            const lessonIndex = activeShift.time_slots.filter((_, idx) => idx < i && !activeShift.time_slots[idx].type).length;
+                            currentLesson = { status: t.lessonStatus, name: t.lessonNames[lessonIndex][dayOfWeek], time: `${timeSlot.start} - ${timeSlot.end}` };
+                        }
+                        break;
+                    }
+                }
+
+                if (!foundLesson) {
+                    const firstSlot = activeShift.time_slots[0];
+                    const [startHour, startMinute] = firstSlot.start.split(":").map(Number);
+                    const startTimeInMinutes = startHour * 60 + startMinute;
+                    const lastSlot = activeShift.time_slots[activeShift.time_slots.length - 1];
+                    const [endHour, endMinute] = lastSlot.end.split(":").map(Number);
+                    const endTimeInMinutes = endHour * 60 + endMinute;
+                    
+                    if (currentTimeInMinutes < startTimeInMinutes) {
+                         currentLesson = { status: t.beforeSchoolStatus, name: t.lessonNames[0][dayOfWeek], time: "" };
+                    } else if (currentTimeInMinutes >= endTimeInMinutes) {
+                         if (dayOfWeek === 4) { 
+                            currentLesson = { status: "🎉", name: t.fridayFinishedTitle, time: t.fridayFinishedSubtitle };
+                            document.querySelector('.lesson-time').classList.add('weekend-message');
                         } else {
                             currentLesson = { status: t.finishedStatus, name: t.finishedStatus, time: "" };
                         }
-                    } else {
-                        const lessonIndex = activeShift.time_slots.filter((_, idx) => idx < i && !activeShift.time_slots[idx].type).length;
-                        currentLesson = { status: t.lessonStatus, name: t.lessonNames[lessonIndex][dayOfWeek], time: `${timeSlot.start} - ${timeSlot.end}` };
+                    } else { 
+                        const nextUpcomingSlot = activeShift.time_slots.find(slot => !slot.type && (slot.start.split(':').map(Number)[0] * 60 + slot.start.split(':').map(Number)[1]) > currentTimeInMinutes);
+                        if (nextUpcomingSlot) {
+                            const nextSlotIndex = activeShift.time_slots.indexOf(nextUpcomingSlot);
+                            const nextLessonPeriodIdx = activeShift.time_slots.filter((_, idx) => idx < nextSlotIndex && !activeShift.time_slots[idx].type).length;
+                            const nextLessonName = t.lessonNames[nextLessonPeriodIdx][dayOfWeek];
+                             const [nextStartHour, nextStartMinute] = nextUpcomingSlot.start.split(":").map(Number);
+                            const nextLessonStartTime = new Date(now);
+                            nextLessonStartTime.setHours(nextStartHour, nextStartMinute, 0, 0);
+                            const diffInSeconds = Math.floor((nextLessonStartTime - now) / 1000);
+                            currentLesson = { 
+                                status: t.breakStatus,
+                                name: nextLessonName,
+                                time: `${t.nextLessonIn} ${Math.floor(diffInSeconds / 60)} min. ${diffInSeconds % 60} sec.`
+                            };
+                        } else {
+                             currentLesson = { status: t.finishedStatus, name: t.finishedStatus, time: "" };
+                        }
                     }
-                    break;
-                }
-            }
-
-            if (!currentLesson) {
-                const nextUpcomingSlot = activeShift.time_slots.find(slot => (slot.start.split(':').map(Number)[0] * 60 + slot.start.split(':').map(Number)[1]) > currentTimeInMinutes);
-                if (nextUpcomingSlot && !nextUpcomingSlot.type) {
-                    const nextSlotIndex = activeShift.time_slots.indexOf(nextUpcomingSlot);
-                    const nextLessonPeriodIdx = activeShift.time_slots.filter((_, idx) => idx < nextSlotIndex && !activeShift.time_slots[idx].type).length;
-                    const nextLessonName = t.lessonNames[nextLessonPeriodIdx][dayOfWeek];
-                    
-                    if(nextLessonName === '-') {
-                        currentLesson = { status: t.finishedStatus, name: t.finishedStatus, time: "" };
-                    } else {
-                        const [nextStartHour, nextStartMinute] = nextUpcomingSlot.start.split(":").map(Number);
-                        const nextLessonStartTime = new Date(now);
-                        nextLessonStartTime.setHours(nextStartHour, nextStartMinute, 0, 0);
-                        const diffInSeconds = Math.floor((nextLessonStartTime - now) / 1000);
-                        
-                        // NEW LOGIC: Check if it's before school or a regular break
-                        const status = (nextLessonPeriodIdx === 0) ? t.beforeSchoolStatus : t.breakStatus;
-                        
-                        currentLesson = {
-                            status: status,
-                            name: nextLessonName,
-                            time: `${t.nextLessonIn} ${Math.floor(diffInSeconds / 60)} min. ${diffInSeconds % 60} sec.`
-                        };
-                    }
-                } else {
-                    currentLesson = { status: "", name: "", time: "" }; // Fallback, should not happen often
                 }
             }
         }
-        
+
         document.querySelector('.status-label').textContent = currentLesson.status;
         document.querySelector('.lesson-name').textContent = currentLesson.name;
         document.querySelector('.lesson-time').textContent = currentLesson.time;
@@ -603,7 +643,8 @@
                 cell.textContent = lesson === '-' ? '' : lesson;
                 const [startHour, startMinute] = lessonTime.start.split(":").map(Number);
                 const [endHour, endMinute] = lessonTime.end.split(":").map(Number);
-                if (j === dayOfWeek && currentTimeInMinutes >= (startHour * 60 + startMinute) && currentTimeInMinutes < (endHour * 60 + endMinute)) {
+                
+                if (!isPreview && j === dayOfWeek && currentTimeInMinutes >= (startHour * 60 + startMinute) && currentTimeInMinutes < (endHour * 60 + endMinute)) {
                     cell.classList.add('current-lesson');
                     const totalDurationInSeconds = ((endHour * 60 + endMinute) - (startHour * 60 + startMinute)) * 60;
                     const elapsedSecondsInLesson = (currentTimeInMinutes - (startHour * 60 + startMinute)) * 60 + now.getSeconds();
@@ -620,15 +661,19 @@
     }
 
     function updateMobileTimetable() {
-        const activeShift = getShift();
+        const { dateForShift, isPreview } = getEffectiveDisplayInfo();
+        const activeShift = getShift(dateForShift);
         const now = getCurrentTime();
-        const dayOfWeek = now.getDay() === 0 ? 6 : now.getDay() - 1;
+        const dayToDisplay = isPreview ? 1 : now.getDay(); 
+        const dayOfWeek = dayToDisplay === 0 ? 6 : dayToDisplay - 1;
+        
         const currentTimeInMinutes = now.getHours() * 60 + now.getMinutes();
         const t = TRANSLATIONS[currentLang];
         document.getElementById('mobile-time-header').textContent = t.timeHeader;
         const mobileDayHeader = document.getElementById('mobile-day-header');
         const mobileTimetableBody = document.getElementById('mobile-timetable-body');
-        if (dayOfWeek >= 5) {
+
+        if (dayOfWeek >= 5 && !isPreview) {
             mobileDayHeader.textContent = '';
             mobileTimetableBody.innerHTML = `<tr><td colspan="2" style="text-align: center;">${t.weekendMessage}</td></tr>`;
         } else {
@@ -646,7 +691,8 @@
                 lessonCell.textContent = lesson === '-' ? '' : lesson;
                 const [startHour, startMinute] = lessonTime.start.split(":").map(Number);
                 const [endHour, endMinute] = lessonTime.end.split(":").map(Number);
-                if (currentTimeInMinutes >= (startHour*60+startMinute) && currentTimeInMinutes < (endHour*60+endMinute)) {
+                
+                if (!isPreview && (now.getDay() === 0 ? 6 : now.getDay() -1) === dayOfWeek && currentTimeInMinutes >= (startHour*60+startMinute) && currentTimeInMinutes < (endHour*60+endMinute)) {
                     lessonCell.classList.add('current-lesson');
                     const totalDurationInSeconds = ((endHour*60+endMinute) - (startHour*60+startMinute)) * 60;
                     const elapsedSecondsInLesson = (currentTimeInMinutes - (startHour*60+startMinute)) * 60 + now.getSeconds();
@@ -698,14 +744,18 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        const modeToggleButton = document.getElementById('mode-toggle');
+        const mainTitle = document.getElementById('main-title');
         const simControls = document.getElementById('simulation-controls');
+        const modeToggleButton = document.getElementById('mode-toggle');
+        
+        modeToggleButton.addEventListener('click', toggleMode);
+
         let clickCount = 0;
         let firstClickTime = 0;
         
-        modeToggleButton.addEventListener('click', () => {
+        mainTitle.addEventListener('click', () => {
             const now = Date.now();
-            if (now - firstClickTime > 3000) {
+            if (now - firstClickTime > 2000) { 
                 clickCount = 1;
                 firstClickTime = now;
             } else {
@@ -753,5 +803,6 @@
         let mainInterval = setInterval(forceUpdateAll, 1000);
     });
 </script>
+
 </body>
 </html>
