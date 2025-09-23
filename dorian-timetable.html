@@ -179,10 +179,13 @@
             background-color: var(--card-bg-dark);
             border-radius: 12px;
             padding: 25px;
+            padding-bottom: 35px; /* Added space for progress bar */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             margin-top: 20px;
             text-align: center;
             transition: background-color 0.3s;
+            position: relative; /* Added for positioning progress bar */
+            overflow: hidden; /* Added to contain progress bar */
         }
 
         body.light-mode .card {
@@ -222,8 +225,28 @@
         body.light-mode .lesson-time {
             color: #7f8c8d;
         }
+
+        .progress-bar-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: rgba(0, 0, 0, 0.2);
+            display: none; /* Hidden by default */
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background-color: var(--green-text-dark);
+            transition: width 0.5s linear;
+        }
+
+        body.light-mode .progress-bar-fill {
+             background-color: var(--green-text-light);
+        }
         
-        /* Exam List Styles */
         #exam-list {
             text-align: left;
             padding: 10px 20px;
@@ -393,27 +416,95 @@
         #mobile-schedule {
             display: none;
         }
+        
+        /* --- NEW MODAL STYLES --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-popup {
+            background-color: var(--card-bg-dark);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 90%;
+            width: 450px;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal-overlay.visible .modal-popup {
+            transform: scale(1);
+        }
+
+        body.light-mode .modal-popup {
+            background-color: var(--card-bg-light);
+        }
+        
+        .modal-popup h2 {
+            margin-top: 0;
+            font-size: 1.5em;
+            color: var(--text-color-dark);
+        }
+        
+        body.light-mode .modal-popup h2 {
+             color: var(--text-color-light);
+        }
+
+        .modal-popup p {
+            margin-bottom: 25px;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .modal-popup button {
+            background-color: var(--highlight-bg-dark);
+            color: var(--highlight-text-dark);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            font-size: 1em;
+        }
+        
+        body.light-mode .modal-popup button {
+            background-color: var(--highlight-bg-light);
+            color: var(--highlight-text-light);
+        }
+
+        .modal-popup button:hover {
+            transform: translateY(-2px);
+        }
 
         @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
+            body { padding: 10px; }
             h1 { font-size: 1.8em; }
             .lesson-name { font-size: 1.5em; }
-            th, td {
-                font-size: 0.8em;
-                min-width: 150px; 
-            }
+            th, td { font-size: 0.8em; min-width: 150px; }
             .table-container { padding: 5px; }
-            
-            .exam-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 5px;
-            }
-            .exam-info {
-                align-items: flex-start;
-            }
+            .exam-item { flex-direction: column; align-items: flex-start; gap: 5px; }
+            .exam-info { align-items: flex-start; }
         }
     </style>
 </head>
@@ -452,6 +543,9 @@
                     <p class="status-label"></p>
                     <p class="lesson-name"></p>
                     <p class="lesson-time"></p>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill"></div>
+                    </div>
                 </div>
             </section>
 
@@ -497,6 +591,15 @@
         </main>
     </div>
 
+    <div class="modal-overlay" id="exam-modal-overlay">
+        <div class="modal-popup">
+            <h2 id="exam-modal-title"></h2>
+            <p id="exam-modal-body"></p>
+            <button id="exam-modal-close-btn"></button>
+        </div>
+    </div>
+
+
 <script>
     const SCHEDULES = {
         morning: {
@@ -532,10 +635,16 @@
         { date: "2025-12-22", time: "08:50", subjectKey: "eng" }
     ];
 
+    // UPDATED TRANSLATIONS FOR MODAL
     const TRANSLATIONS = {
         bs: {
             mainTitle: "Dorian's Timetable", dark: "Tamni", light: "Svijetli", viewToggleWeekly: "Prikaz sedmice", viewToggleDaily: "Prikaz dana", currentTitle: "Trenutni raspored", fullTitle: "Cijeli Sedmični Raspored", mobileTitle: "Današnji Raspored", timeHeader: "Vrijeme", days: ["Ponedjeljak", "Utorak", "Srijeda", "Četvrtak", "Petak"], lessonStatus: "Trenutni Čas", breakName: "PAUZA", breakStatus: "Pauza", firstLessonIs: "Današnji prvi čas je", beforeSchoolStatus: "Nastava počinje uskoro", beforeSchoolCountdown: "Nastava počinje za", finishedStatus: "Nastava je završila!", fridayFinishedTitle: "Nastava je završila!", fridayFinishedSubtitle: "Ugodan vikend! Ne zaboravite završiti zadaću za sljedeću sedmicu i ponoviti ono što ste naučili.", morningShift: "Prva smjena", afternoonShift: "Druga smjena", weekendMessage: "Uživajte u vikendu, pripremite se za nadolazeću sedmicu!", nextLessonIn: "Sljedeći čas za", weekendPreviewTitle: "Sedmica je gotova!", weekendPreviewSubtitle: "Sljedeće sedmice nastava je u", examTitle: "Raspored Ispita",
-            examInDays: "za {days} dana", examInOneDay: "za 1 dan", examToday: "Danas!",
+            examInDays: "za {days} dana", examInOneDay: "za 1 dan", examToday: "danas",
+            examPopup: {
+                title: "🚨 Upozorenje o Ispitu 🚨",
+                body: "Ispit iz predmeta {subject} je {countdown}!<br><br>Ponavljaj i uči intenzivnije za uspjeh!",
+                closeButton: "U redu"
+            },
             subjects: { bhs: "BHS Jezik i Književnost", eng: "Engleski Jezik", math: "Matematika" },
             lessonNames: [
                 ["Engleski Jezik", "Tjelesni i Zdravstveni Odgoj", "Matematika", "Likovna Kultura", "BHS Jezik i Književnost"],
@@ -546,7 +655,12 @@
         },
         en: {
             mainTitle: "Dorian's Timetable", dark: "Dark", light: "Light", viewToggleWeekly: "Weekly View", viewToggleDaily: "Daily View", currentTitle: "Current Schedule", fullTitle: "Full Weekly Schedule", mobileTitle: "Today's Schedule", timeHeader: "Time", days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], lessonStatus: "Current Lesson", breakName: "BREAK", breakStatus: "Break", firstLessonIs: "Today's first lesson is", beforeSchoolStatus: "Classes start soon", beforeSchoolCountdown: "Classes start in", finishedStatus: "Classes have finished!", fridayFinishedTitle: "Classes have finished!", fridayFinishedSubtitle: "Have a nice weekend! Don't forget to finish homework for next week and repeat what you have learned.", morningShift: "First shift", afternoonShift: "Second shift", weekendMessage: "Enjoy your weekend, get ready for the upcoming week!", nextLessonIn: "Next lesson in", weekendPreviewTitle: "The week is over!", weekendPreviewSubtitle: "Next week's classes are in the", examTitle: "Exam Schedule",
-            examInDays: "in {days} days", examInOneDay: "in 1 day", examToday: "Today!",
+            examInDays: "in {days} days", examInOneDay: "in 1 day", examToday: "today",
+            examPopup: {
+                title: "🚨 Exam Alert 🚨",
+                body: "The {subject} exam is {countdown}!<br><br>Please repeat and study more intensely for success!",
+                closeButton: "Okay"
+            },
             subjects: { bhs: "BCS Language and Literature", eng: "English Language", math: "Mathematics" },
             lessonNames: [
                 ["English Language", "Physical and Health Education", "Mathematics", "Art Culture", "BCS Language and Literature"],
@@ -557,7 +671,12 @@
         },
         tr: {
             mainTitle: "Dorian's Timetable", dark: "Karanlık", light: "Aydınlık", viewToggleWeekly: "Haftalık Görünüm", viewToggleDaily: "Günlük Görünüm", currentTitle: "Mevcut Ders", fullTitle: "Haftalık Ders Programı", mobileTitle: "Bugünün Ders Programı", timeHeader: "Saat", days: ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma"], lessonStatus: "Mevcut Ders", breakName: "TENEFÜS", breakStatus: "Tenefüs", firstLessonIs: "Bugünün ilk dersi", beforeSchoolStatus: "Dersler yakında başlıyor", beforeSchoolCountdown: "Derslerin başlamasına", finishedStatus: "Dersler bitti!", fridayFinishedTitle: "Dersler bitti!", fridayFinishedSubtitle: "İyi hafta sonları! Gelecek haftanın ödevlerini bitirmeyi ve öğrendiklerinizi tekrar etmeyi unutmayın.", morningShift: "Sabahçı", afternoonShift: "Öğlenci", weekendMessage: "Hafta sonunun tadını çıkarın, yeni haftaya hazırlanın!", nextLessonIn: "Bir sonraki ders", weekendPreviewTitle: "Hafta bitti!", weekendPreviewSubtitle: "Gelecek haftaki dersler", previewShiftMorning: "Gelecek hafta dersler sabah.", previewShiftAfternoon: "Gelecek hafta dersler öğleden sonra.", examTitle: "Sınav Takvimi",
-            examInDays: "{days} gün içinde", examInOneDay: "1 gün içinde", examToday: "Bugün!",
+            examInDays: "{days} gün içinde", examInOneDay: "1 gün içinde", examToday: "bugün",
+            examPopup: {
+                title: "🚨 Sınav Uyarısı 🚨",
+                body: "{subject} sınavı {countdown}!<br><br>Başarı için lütfen daha yoğun tekrar yap ve çalış!",
+                closeButton: "Tamam"
+            },
             subjects: { bhs: "Boşnak Dili ve Edebiyatı", eng: "İngilizce", math: "Matematik" },
             lessonNames: [
                 ["İngilizce", "Beden Eğitimi", "Matematik", "Resim", "Boşnak Dili ve Edebiyatı"],
@@ -568,7 +687,12 @@
         },
         it: {
             mainTitle: "Orario di Dorian", dark: "Scuro", light: "Chiaro", viewToggleWeekly: "Vista Settimanale", viewToggleDaily: "Vista Giornaliera", currentTitle: "Lezione Corrente", fullTitle: "Orario Settimanale Completo", mobileTitle: "Orario di Oggi", timeHeader: "Ora", days: ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì"], lessonStatus: "Lezione in Corso", breakName: "PAUSA", breakStatus: "Pausa", firstLessonIs: "La prima lezione di oggi è", beforeSchoolStatus: "Le lezioni iniziano a breve", beforeSchoolCountdown: "Le lezioni iniziano tra", finishedStatus: "Le lezioni sono finite!", fridayFinishedTitle: "Le lezioni sono finite!", fridayFinishedSubtitle: "Buon fine settimana! Non dimenticate di finire i compiti per la prossima settimana e di ripassare ciò che avete imparato.", morningShift: "Turno Mattutino", afternoonShift: "Turno Pomeridiano", weekendMessage: "Goditi il fine settimana, preparati per la prossima!", nextLessonIn: "Prossima lezione tra", weekendPreviewTitle: "La settimana è finita!", weekendPreviewSubtitle: "Le lezioni della prossima settimana sono nel", examTitle: "Calendario Esami",
-            examInDays: "tra {days} giorni", examInOneDay: "tra 1 giorno", examToday: "Oggi!",
+            examInDays: "tra {days} giorni", examInOneDay: "tra 1 giorno", examToday: "oggi",
+            examPopup: {
+                title: "🚨 Avviso Esame 🚨",
+                body: "L'esame di {subject} è {countdown}!<br><br>Per favore, ripassa e studia più intensamente per avere successo!",
+                closeButton: "OK"
+            },
             subjects: { bhs: "Lingua e Letteratura BHS", eng: "Lingua Inglese", math: "Matematica" },
             lessonNames: [
                 ["Lingua Inglese", "Educazione Fisica e Sanitaria", "Matematica", "Cultura Artistica", "Lingua e Letteratura BHS"],
@@ -579,7 +703,12 @@
         },
         sq: {
             mainTitle: "Orari i Dorianit", dark: "Errët", light: "Ndritshëm", viewToggleWeekly: "Pamja Javore", viewToggleDaily: "Pamja Ditore", currentTitle: "Ora Aktuale", fullTitle: "Orari i Plotë Javor", mobileTitle: "Orari i Sotëm", timeHeader: "Koha", days: ["E Hënë", "E Martë", "E Mërkurë", "E Enjte", "E Premte"], lessonStatus: "Ora në Vazhdim", breakName: "PUSHIM", breakStatus: "Pushim", firstLessonIs: "Ora e parë e sotme është", beforeSchoolStatus: "Mësimi fillon së shpejti", beforeSchoolCountdown: "Mësimi fillon për", finishedStatus: "Mësimi ka përfunduar!", fridayFinishedTitle: "Mësimi ka përfunduar!", fridayFinishedSubtitle: "Fundjavë të këndshme! Mos harroni të përfundoni detyrat e shtëpisë për javën e ardhshme dhe të përsërisni atë që keni mësuar.", morningShift: "Ndërrimi i Paradites", afternoonShift: "Ndërrimi i Pasdites", weekendMessage: "Shijoni fundjavën, bëhuni gati për javën e ardhshme!", nextLessonIn: "Ora tjetër në", weekendPreviewTitle: "Java ka mbaruar!", weekendPreviewSubtitle: "Orët e javës së ardhshme janë në", examTitle: "Orari i Provimeve",
-            examInDays: "për {days} ditë", examInOneDay: "për 1 ditë", examToday: "Sot!",
+            examInDays: "për {days} ditë", examInOneDay: "për 1 ditë", examToday: "sot",
+            examPopup: {
+                title: "🚨 Alarm Provimi 🚨",
+                body: "Provimi i {subject} është {countdown}!<br><br>Ju lutemi përsërisni dhe studioni më intensivisht për sukses!",
+                closeButton: "Në rregull"
+            },
             subjects: { bhs: "Gjuha dhe Letërsia BHS", eng: "Gjuha Angleze", math: "Matematikë" },
             lessonNames: [
                 ["Gjuha Angleze", "Edukatë Fizike dhe Shëndetësore", "Matematikë", "Kulturë Artistike", "Gjuha dhe Letërsia BHS"],
@@ -706,7 +835,7 @@
                  const countdownSpan = document.createElement('span');
                  countdownSpan.classList.add('countdown');
                 if (diffDays === 0) {
-                    countdownSpan.textContent = `(${t.examToday})`;
+                    countdownSpan.textContent = `(${t.examToday.charAt(0).toUpperCase() + t.examToday.slice(1)}!)`;
                 } else {
                     const text = (diffDays === 1) ? t.examInOneDay : t.examInDays.replace('{days}', diffDays);
                     countdownSpan.textContent = `(${text})`;
@@ -727,6 +856,10 @@
         const dayOfWeek = now.getDay() === 0 ? 6 : now.getDay() - 1;
         const currentTimeInMinutes = now.getHours() * 60 + now.getMinutes();
         const t = TRANSLATIONS[currentLang];
+        
+        const progressBarContainer = document.querySelector('.progress-bar-container');
+        const progressBarFill = document.querySelector('.progress-bar-fill');
+        progressBarContainer.style.display = 'none';
         
         document.querySelector('.shift-info').textContent = `${t[activeShift.shiftNameKey]} ${activeShift.shiftTimes}`;
         let currentLesson = null;
@@ -758,6 +891,17 @@
 
                     if (currentTimeInMinutes >= startTimeInMinutes && currentTimeInMinutes < endTimeInMinutes) {
                         foundLesson = true;
+                        
+                        const startTimeInSeconds = startHour * 3600 + startMinute * 60;
+                        const endTimeInSeconds = endHour * 3600 + endMinute * 60;
+                        const currentTimeInSeconds = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+                        const totalDuration = endTimeInSeconds - startTimeInSeconds;
+                        const elapsed = currentTimeInSeconds - startTimeInSeconds;
+                        const progress = (elapsed / totalDuration) * 100;
+
+                        progressBarContainer.style.display = 'block';
+                        progressBarFill.style.width = `${Math.min(100, Math.max(0, progress))}%`;
+
                         if (timeSlot.type === "break") {
                             const nextLessonIndex = activeShift.time_slots.findIndex((slot, idx) => idx > i && !slot.type);
                             if (nextLessonIndex !== -1) {
@@ -785,12 +929,13 @@
                             const lessonName = t.lessonNames[lessonIndex][dayOfWeek];
 
                             if (lessonName === "" || lessonName === "-") {
-                                if (dayOfWeek === 4) { // It's Friday
+                                if (dayOfWeek === 4) { 
                                     currentLesson = { status: "🎉", name: t.fridayFinishedTitle, time: t.fridayFinishedSubtitle };
                                     document.querySelector('.lesson-time').classList.add('weekend-message');
-                                } else { // Any other weekday
+                                } else { 
                                     currentLesson = { status: t.finishedStatus, name: t.finishedStatus, time: "" };
                                 }
+                                progressBarContainer.style.display = 'none'; 
                             } else {
                                 currentLesson = { status: t.lessonStatus, name: lessonName, time: `${timeSlot.start} - ${timeSlot.end}` };
                             }
@@ -975,11 +1120,75 @@
         updateViewToggleText();
     }
 
+    // MODIFIED FUNCTION TO USE HTML MODAL
+    function checkForUpcomingExamPopup() {
+        const t = TRANSLATIONS[currentLang];
+        const now = getCurrentTime();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+        const upcomingExams = EXAMS.filter(exam => {
+            const [year, month, day] = exam.date.split('-').map(Number);
+            const examDate = new Date(year, month - 1, day);
+            const diffTime = examDate.getTime() - today.getTime();
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays >= 0 && diffDays <= 7;
+        });
+
+        if (upcomingExams.length > 0) {
+            upcomingExams.sort((a, b) => new Date(a.date) - new Date(b.date));
+            const soonestExam = upcomingExams[0];
+
+            const [year, month, day] = soonestExam.date.split('-').map(Number);
+            const examDate = new Date(year, month - 1, day);
+            const diffTime = examDate.getTime() - today.getTime();
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            let countdownText = '';
+            if (diffDays === 0) {
+                countdownText = t.examToday;
+            } else {
+                countdownText = (diffDays === 1) ? t.examInOneDay : t.examInDays.replace('{days}', diffDays);
+            }
+            
+            const subjectName = t.subjects[soonestExam.subjectKey];
+            
+            // Populate and show the modal
+            const modalOverlay = document.getElementById('exam-modal-overlay');
+            const modalTitle = document.getElementById('exam-modal-title');
+            const modalBody = document.getElementById('exam-modal-body');
+            const modalCloseBtn = document.getElementById('exam-modal-close-btn');
+
+            modalTitle.textContent = t.examPopup.title;
+            modalBody.innerHTML = t.examPopup.body
+                .replace('{subject}', subjectName)
+                .replace('{countdown}', countdownText);
+            modalCloseBtn.textContent = t.examPopup.closeButton;
+            
+            modalOverlay.classList.add('visible');
+        }
+    }
+
+
     document.addEventListener('DOMContentLoaded', () => {
         const mainTitle = document.getElementById('main-title');
         const simControls = document.getElementById('simulation-controls');
         const modeToggleButton = document.getElementById('mode-toggle');
         
+        // Modal elements and event listeners
+        const modalOverlay = document.getElementById('exam-modal-overlay');
+        const modalCloseBtn = document.getElementById('exam-modal-close-btn');
+        
+        const closeModal = () => modalOverlay.classList.remove('visible');
+
+        modalCloseBtn.addEventListener('click', closeModal);
+        modalOverlay.addEventListener('click', (event) => {
+            if (event.target === modalOverlay) {
+                closeModal();
+            }
+        });
+
+        checkForUpcomingExamPopup();
+
         modeToggleButton.addEventListener('click', toggleMode);
 
         let clickCount = 0;
