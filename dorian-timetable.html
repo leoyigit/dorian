@@ -32,6 +32,8 @@
             --upcoming-border-dark: #f1c40f;
             --upcoming-bg-dark: rgba(241, 196, 15, 0.08);
             --countdown-text-dark: #f39c12;
+            --current-day-bg-dark: rgba(236, 240, 241, 0.08);
+            --break-highlight-border-dark: #f1c40f;
 
             --primary-color-light: #ecf0f1;
             --secondary-color-light: #bdc3c7;
@@ -44,6 +46,8 @@
             --upcoming-border-light: #d35400;
             --upcoming-bg-light: rgba(230, 126, 34, 0.1);
             --countdown-text-light: #d35400;
+            --current-day-bg-light: rgba(44, 62, 80, 0.08);
+            --break-highlight-border-light: #d35400;
         }
 
         body {
@@ -503,6 +507,25 @@
             transform: translateY(-2px);
         }
 
+        /* --- UPDATED STYLES --- */
+        .current-day-column {
+             background-color: var(--current-day-bg-dark);
+        }
+
+        body.light-mode .current-day-column {
+             background-color: var(--current-day-bg-light);
+        }
+
+        .current-break-cell {
+             border-bottom: 3px solid var(--break-highlight-border-dark) !important;
+             padding-bottom: 9px; /* Adjust padding to prevent layout shift */
+        }
+
+        body.light-mode .current-break-cell {
+             border-bottom: 3px solid var(--break-highlight-border-light) !important;
+        }
+        /* --- END UPDATED STYLES --- */
+
         @media (max-width: 768px) {
             body { padding: 10px; }
             h1 { font-size: 1.8em; }
@@ -592,7 +615,7 @@
             <section id="exam-schedule">
                 <h2 id="exam-title">Nadolazeći Ispiti</h2>
                 <div id="exam-list" class="card">
-                    </div>
+                </div>
             </section>
         </main>
     </div>
@@ -886,6 +909,31 @@
         document.querySelector('.shift-info').textContent = `${t[activeShift.shiftNameKey]} ${activeShift.shiftTimes}`;
         let currentLesson = null;
         
+        const lessonTimeSlots = activeShift.time_slots.filter(slot => !slot.type);
+        let breakRowIndex = -1;
+        if (!isPreview && dayOfWeek < 5) {
+            for (let i = 0; i < activeShift.time_slots.length - 1; i++) {
+                const currentSlot = activeShift.time_slots[i];
+                const nextSlot = activeShift.time_slots[i + 1];
+
+                const [currentEndHour, currentEndMinute] = currentSlot.end.split(":").map(Number);
+                const currentEndTimeInMinutes = currentEndHour * 60 + currentEndMinute;
+
+                const [nextStartHour, nextStartMinute] = nextSlot.start.split(":").map(Number);
+                const nextStartTimeInMinutes = nextStartHour * 60 + nextStartMinute;
+
+                if (currentTimeInMinutes >= currentEndTimeInMinutes && currentTimeInMinutes < nextStartTimeInMinutes) {
+                    if (!currentSlot.type) {
+                        const lessonIndex = lessonTimeSlots.findIndex(lesson => lesson.start === currentSlot.start);
+                        if (lessonIndex > -1) {
+                            breakRowIndex = lessonIndex;
+                        }
+                    }
+                    break; 
+                }
+            }
+        }
+        
         if (isPreview) {
             let lessonName = `${t.weekendPreviewSubtitle} ${t[activeShift.shiftNameKey].toLowerCase()}`;
             if (currentLang === 'tr') {
@@ -1012,7 +1060,7 @@
                             nextLessonStartTime.setHours(nextStartHour, nextStartMinute, 0, 0);
                             const diffInSeconds = Math.floor((nextLessonStartTime - now) / 1000);
                             const timeToNextLesson = `${Math.floor(diffInSeconds / 60)} min. ${diffInSeconds % 60} sec.`;
-                           
+                            
                             currentLesson = {
                                 status: t.breakStatus,
                                 name: t.breakNextLesson.replace('{lessonName}', nextLessonName),
@@ -1030,19 +1078,34 @@
         document.querySelector('.lesson-name').innerHTML = currentLesson.name;
         document.querySelector('.lesson-time').innerHTML = currentLesson.time;
 
+        const tableHeaderCells = document.getElementById('table-header').querySelectorAll('th');
+        tableHeaderCells.forEach(th => th.classList.remove('current-day-column'));
+        if (!isPreview && dayOfWeek >= 0 && dayOfWeek < 5) {
+            tableHeaderCells[dayOfWeek + 1].classList.add('current-day-column');
+        }
+
         const tableBody = document.getElementById('timetable-body');
         tableBody.innerHTML = '';
-        const lessonTimeSlots = activeShift.time_slots.filter(slot => !slot.type);
         for (let i = 0; i < lessonTimeSlots.length; i++) {
             const row = document.createElement('tr');
             const lessonTime = lessonTimeSlots[i];
             const timeCell = document.createElement('td');
             timeCell.textContent = `${lessonTime.start} - ${lessonTime.end}`;
             row.appendChild(timeCell);
+
             for (let j = 0; j < t.days.length; j++) {
                 const lesson = t.lessonNames[i][j];
                 const cell = document.createElement('td');
                 cell.textContent = (lesson === '-' || lesson === "") ? '' : lesson;
+                
+                if (!isPreview && j === dayOfWeek) {
+                    cell.classList.add('current-day-column');
+                }
+
+                if (i === breakRowIndex && j === dayOfWeek) {
+                    cell.classList.add('current-break-cell');
+                }
+                
                 const [startHour, startMinute] = lessonTime.start.split(":").map(Number);
                 const [endHour, endMinute] = lessonTime.end.split(":").map(Number);
                 
@@ -1068,14 +1131,36 @@
         const { dateForShift, isPreview } = getEffectiveDisplayInfo();
         const activeShift = getShift(dateForShift);
         const now = getCurrentTime();
-        const dayToDisplay = isPreview ? 1 : now.getDay(); 
+        const dayToDisplay = isPreview ? 1 : now.getDay();
         const dayOfWeek = dayToDisplay === 0 ? 6 : dayToDisplay - 1;
-        
+
         const currentTimeInMinutes = now.getHours() * 60 + now.getMinutes();
         const t = TRANSLATIONS[currentLang];
         document.getElementById('mobile-time-header').textContent = t.timeHeader;
         const mobileDayHeader = document.getElementById('mobile-day-header');
         const mobileTimetableBody = document.getElementById('mobile-timetable-body');
+
+        const lessonTimeSlots = activeShift.time_slots.filter(slot => !slot.type);
+        let breakRowIndex = -1;
+        if (!isPreview && dayOfWeek < 5) {
+             for (let i = 0; i < activeShift.time_slots.length - 1; i++) {
+                const currentSlot = activeShift.time_slots[i];
+                const nextSlot = activeShift.time_slots[i + 1];
+                const [currentEndHour, currentEndMinute] = currentSlot.end.split(":").map(Number);
+                const currentEndTimeInMinutes = currentEndHour * 60 + currentEndMinute;
+                const [nextStartHour, nextStartMinute] = nextSlot.start.split(":").map(Number);
+                const nextStartTimeInMinutes = nextStartHour * 60 + nextStartMinute;
+                if (currentTimeInMinutes >= currentEndTimeInMinutes && currentTimeInMinutes < nextStartTimeInMinutes) {
+                    if (!currentSlot.type) {
+                        const lessonIndex = lessonTimeSlots.findIndex(lesson => lesson.start === currentSlot.start);
+                        if (lessonIndex > -1) {
+                            breakRowIndex = lessonIndex;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
 
         if (dayOfWeek >= 5 && !isPreview) {
             mobileDayHeader.textContent = '';
@@ -1083,24 +1168,29 @@
         } else {
             mobileDayHeader.textContent = t.days[dayOfWeek];
             mobileTimetableBody.innerHTML = '';
-            const lessonTimeSlots = activeShift.time_slots.filter(slot => !slot.type);
             for (let i = 0; i < lessonTimeSlots.length; i++) {
                 const row = document.createElement('tr');
                 const lessonTime = lessonTimeSlots[i];
                 const timeCell = document.createElement('td');
                 timeCell.textContent = `${lessonTime.start} - ${lessonTime.end}`;
                 row.appendChild(timeCell);
+
                 const lessonCell = document.createElement('td');
                 const lesson = t.lessonNames[i][dayOfWeek];
                 lessonCell.textContent = lesson === '-' ? '' : lesson;
+
+                if (i === breakRowIndex) {
+                    lessonCell.classList.add('current-break-cell');
+                }
+                
                 const [startHour, startMinute] = lessonTime.start.split(":").map(Number);
                 const [endHour, endMinute] = lessonTime.end.split(":").map(Number);
-                
-                if (!isPreview && (now.getDay() === 0 ? 6 : now.getDay() -1) === dayOfWeek && currentTimeInMinutes >= (startHour*60+startMinute) && currentTimeInMinutes < (endHour*60+endMinute)) {
+
+                if (!isPreview && (now.getDay() === 0 ? 6 : now.getDay() - 1) === dayOfWeek && currentTimeInMinutes >= (startHour * 60 + startMinute) && currentTimeInMinutes < (endHour * 60 + endMinute)) {
                     if (lesson !== "" && lesson !== "-") {
                         lessonCell.classList.add('current-lesson');
-                        const totalDurationInSeconds = ((endHour*60+endMinute) - (startHour*60+startMinute)) * 60;
-                        const elapsedSecondsInLesson = (currentTimeInMinutes - (startHour*60+startMinute)) * 60 + now.getSeconds();
+                        const totalDurationInSeconds = ((endHour * 60 + endMinute) - (startHour * 60 + startMinute)) * 60;
+                        const elapsedSecondsInLesson = (currentTimeInMinutes - (startHour * 60 + startMinute)) * 60 + now.getSeconds();
                         const highlight = document.createElement('div');
                         highlight.classList.add('lesson-highlight');
                         highlight.style.height = `${Math.max(0, 1 - (elapsedSecondsInLesson / totalDurationInSeconds)) * 100}%`;
@@ -1113,17 +1203,16 @@
             }
         }
     }
+    
     function updateModeButtonText() {
         const button = document.getElementById('mode-toggle');
         const t = TRANSLATIONS[currentLang];
         if (document.body.classList.contains('light-mode')) { button.textContent = `🌙 ${t.light}`; } else { button.textContent = `☀️ ${t.dark}`; }
     }
 
-    // UPDATED: setLanguage now syncs both selectors
     function setLanguage(lang) {
         currentLang = lang;
         
-        // Sync both language selectors
         document.getElementById('language-selector').value = lang;
         document.getElementById('exam-modal-language-selector').value = lang;
 
@@ -1140,7 +1229,6 @@
         updateViewToggleText();
         forceUpdateAll();
 
-        // Re-check for exam pop-up to update its text if it's open
         const modalOverlay = document.getElementById('exam-modal-overlay');
         if (modalOverlay.classList.contains('visible')) {
             checkForUpcomingExamPopup(true);
@@ -1163,14 +1251,11 @@
         updateViewToggleText();
     }
 
-    // UPDATED: This function now prevents re-showing the pop-up in the same session
-    // and can be forced to show to update the language.
     function checkForUpcomingExamPopup(forceShow = false) {
         const t = TRANSLATIONS[currentLang];
         const now = getCurrentTime();
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         
-        // Check if the popup has already been shown today to prevent it from reappearing
         const popupShownKey = `examPopupShown_${today.toISOString().split('T')[0]}`;
         if (sessionStorage.getItem(popupShownKey) && !forceShow) {
             return; 
@@ -1214,7 +1299,7 @@
             modalCloseBtn.textContent = t.examPopup.closeButton;
             
             modalOverlay.classList.add('visible');
-            sessionStorage.setItem(popupShownKey, 'true'); // Mark as shown for this session
+            sessionStorage.setItem(popupShownKey, 'true');
         }
     }
 
@@ -1278,7 +1363,6 @@
         document.getElementById('language-selector').addEventListener('change', (event) => setLanguage(event.target.value));
         document.getElementById('view-toggle').addEventListener('click', toggleView);
 
-        // ADDED: Logic to initialize and sync the new modal language selector
         const mainLangSelector = document.getElementById('language-selector');
         const modalLangSelector = document.getElementById('exam-modal-language-selector');
 
@@ -1286,7 +1370,6 @@
         modalLangSelector.value = currentLang;
 
         modalLangSelector.addEventListener('change', (event) => setLanguage(event.target.value));
-        // --- End of new logic ---
 
         if (window.innerWidth <= 768) {
             isWeeklyView = false;
