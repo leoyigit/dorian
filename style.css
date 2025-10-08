@@ -1,0 +1,552 @@
+:root {
+    /* Dark Mode Variables */
+    --primary-color-dark: #2c3e50;
+    --secondary-color-dark: #34495e;
+    --card-bg-dark: #4a657c;
+    --text-color-dark: #ecf0f1;
+    --highlight-bg-dark: #27ae60;
+    --highlight-text-dark: #fff;
+    --green-text-dark: #2ecc71;
+    --hover-bg-dark: #5e7d98;
+    --upcoming-border-dark: #f1c40f;
+    --upcoming-bg-dark: rgba(241, 196, 15, 0.08);
+    --countdown-text-dark: #f39c12;
+    --current-day-bg-dark: rgba(236, 240, 241, 0.08);
+    --break-highlight-border-dark: #f1c40f;
+
+    /* Light Mode Variables */
+    --primary-color-light: #ecf0f1;
+    --secondary-color-light: #bdc3c7;
+    --card-bg-light: #dfe6ee;
+    --text-color-light: #2c3e50;
+    --highlight-bg-light: #27ae60;
+    --highlight-text-light: #2c3e50;
+    --green-text-light: #27ae60;
+    --hover-bg-light: #cad3dc;
+    --upcoming-border-light: #d35400;
+    --upcoming-bg-light: rgba(230, 126, 34, 0.1);
+    --countdown-text-light: #d35400;
+    --current-day-bg-light: rgba(44, 62, 80, 0.08);
+    --break-highlight-border-light: #d35400;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--primary-color-dark);
+    color: var(--text-color-dark);
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body.light-mode {
+    background-color: var(--primary-color-light);
+    color: var(--text-color-light);
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    padding: 10px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+h1 {
+    font-size: 2em;
+    font-weight: 600;
+    color: var(--text-color-dark);
+    cursor: progress;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+body.light-mode h1 {
+    color: var(--text-color-light);
+}
+
+#datetime-display {
+    font-size: 1.1em;
+    font-weight: 400;
+    color: #95a5a6;
+    margin-top: -10px;
+}
+
+.shift-info {
+    font-size: 1em;
+    font-style: italic;
+    color: var(--text-color-dark);
+    margin-top: -10px;
+}
+
+body.light-mode .shift-info {
+    color: var(--text-color-light);
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.controls button,
+.controls select {
+    background-color: var(--secondary-color-dark);
+    color: var(--text-color-dark);
+    border: 2px solid var(--text-color-dark);
+    padding: 10px 15px;
+    border-radius: 20px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, transform 0.2s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode .controls button,
+body.light-mode .controls select {
+    background-color: var(--secondary-color-light);
+    color: var(--text-color-light);
+    border: 2px solid var(--text-color-light);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.controls button:hover,
+.controls select:hover {
+    transform: translateY(-2px);
+    background-color: var(--hover-bg-dark);
+}
+
+body.light-mode .controls button:hover,
+body.light-mode .controls select:hover {
+    background-color: var(--hover-bg-light);
+}
+
+#simulation-controls {
+    display: none;
+    background-color: var(--card-bg-dark);
+    padding: 20px;
+    margin: 20px auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    max-width: 500px;
+}
+
+body.light-mode #simulation-controls {
+    background-color: var(--card-bg-light);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#simulation-controls.visible {
+    display: block;
+}
+
+#simulation-controls input,
+#simulation-controls button {
+    background-color: var(--secondary-color-dark);
+    color: var(--text-color-dark);
+    border: 2px solid var(--text-color-dark);
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    margin: 5px;
+}
+
+body.light-mode #simulation-controls input,
+body.light-mode #simulation-controls button {
+    background-color: var(--secondary-color-light);
+    color: var(--text-color-light);
+    border: 2px solid var(--text-color-light);
+}
+
+#current-schedule,
+#exam-schedule {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.card {
+    background-color: var(--card-bg-dark);
+    border-radius: 12px 12px 0 0;
+    padding: 25px;
+    padding-bottom: 35px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-top: 20px;
+    text-align: center;
+    transition: background-color 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+body.light-mode .card {
+    background-color: var(--card-bg-light);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.status-label {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: var(--green-text-dark);
+    margin-bottom: 5px;
+}
+
+body.light-mode .status-label {
+    color: var(--green-text-light);
+}
+
+.lesson-name {
+    font-size: 1.8em;
+    font-weight: 600;
+    margin: 10px 0;
+}
+
+.lesson-time {
+    font-size: 1em;
+    font-style: italic;
+    color: #bdc3c7;
+}
+
+.lesson-time.weekend-message {
+    font-style: normal;
+    font-size: 1.1em;
+    line-height: 1.5;
+}
+
+body.light-mode .lesson-time {
+    color: #7f8c8d;
+}
+
+.progress-bar-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background-color: rgba(0, 0, 0, 0.2);
+    display: none;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    width: 0%;
+    background-color: var(--green-text-dark);
+    transition: width 0.5s linear;
+}
+
+body.light-mode .progress-bar-fill {
+    background-color: var(--green-text-light);
+}
+
+#exam-list {
+    border-radius: 0px 0px 12px 12px;
+    text-align: left;
+    padding: 10px 20px;
+}
+
+.exam-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 10px;
+    border-bottom: 1px solid var(--secondary-color-dark);
+    transition: all 0.3s;
+    border-left: 4px solid transparent;
+    margin: 2px 0;
+}
+
+body.light-mode .exam-item {
+    border-bottom: 1px solid var(--secondary-color-light);
+}
+
+.exam-item:last-child {
+    border-bottom: none;
+}
+
+.exam-subject {
+    font-weight: 600;
+    font-size: 1.1em;
+    white-space: nowrap;
+}
+
+.exam-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    font-style: italic;
+    color: #bdc3c7;
+    font-size: 0.95em;
+}
+
+body.light-mode .exam-info {
+    color: #7f8c8d;
+}
+
+.exam-info .countdown {
+    font-weight: bold;
+    color: var(--countdown-text-dark);
+}
+
+body.light-mode .exam-info .countdown {
+    color: var(--countdown-text-light);
+}
+
+.exam-item.past {
+    opacity: 0.5;
+    text-decoration: line-through;
+}
+
+.exam-item.upcoming {
+    border-left: 4px solid var(--upcoming-border-dark);
+    background-color: var(--upcoming-bg-dark);
+}
+
+body.light-mode .exam-item.upcoming {
+    border-left-color: var(--upcoming-border-light);
+    background-color: var(--upcoming-bg-light);
+}
+
+#full-schedule h2,
+#mobile-schedule h2,
+#exam-schedule h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.table-container {
+    overflow-x: auto;
+    background-color: var(--secondary-color-dark);
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s;
+}
+
+body.light-mode .table-container {
+    background-color: var(--secondary-color-light);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    table-layout: auto;
+}
+
+th,
+td {
+    padding: 12px 8px;
+    border: 1px solid #7f8c8d;
+}
+
+thead th,
+#mobile-schedule thead th {
+    background-color: var(--secondary-color-dark);
+    color: var(--text-color-dark);
+    font-weight: 600;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body.light-mode thead th,
+body.light-mode #mobile-schedule thead th {
+    background-color: var(--secondary-color-light);
+    color: var(--text-color-light);
+}
+
+tr:nth-child(even) {
+    background-color: #3e566b;
+}
+
+body.light-mode tr:nth-child(even) {
+    background-color: #d1d9e2;
+}
+
+td {
+    transition: background-color 0.3s;
+}
+
+body.light-mode td {
+    color: var(--text-color-light);
+}
+
+td:hover {
+    background-color: var(--hover-bg-dark);
+}
+
+body.light-mode td:hover {
+    background-color: var(--hover-bg-light);
+}
+
+.current-lesson {
+    position: relative;
+    color: var(--highlight-text-dark);
+    font-weight: 600;
+    transition: transform 0.2s ease-in-out;
+    overflow: hidden;
+    z-index: 1;
+}
+
+body.light-mode .current-lesson {
+    color: var(--highlight-text-light);
+}
+
+.lesson-highlight {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--highlight-bg-dark);
+    z-index: -1;
+    transition: height linear;
+}
+
+body.light-mode .lesson-highlight {
+    background-color: var(--highlight-bg-light);
+}
+
+#mobile-schedule {
+    display: none;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.modal-overlay.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-popup {
+    background-color: var(--card-bg-dark);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    max-width: 90%;
+    width: 450px;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.visible .modal-popup {
+    transform: scale(1);
+}
+
+body.light-mode .modal-popup {
+    background-color: var(--card-bg-light);
+}
+
+.modal-popup h2 {
+    margin-top: 0;
+    font-size: 1.5em;
+    color: var(--text-color-dark);
+}
+
+body.light-mode .modal-popup h2 {
+    color: var(--text-color-light);
+}
+
+.modal-popup p {
+    margin-bottom: 25px;
+    font-size: 1.1em;
+    line-height: 1.6;
+}
+
+.modal-popup button {
+    background-color: var(--highlight-bg-dark);
+    color: var(--highlight-text-dark);
+    border: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    font-size: 1em;
+}
+
+body.light-mode .modal-popup button {
+    background-color: var(--highlight-bg-light);
+    color: var(--highlight-text-light);
+}
+
+.modal-popup button:hover {
+    transform: translateY(-2px);
+}
+
+/* --- Dynamic Styles --- */
+.current-day-column {
+    background-color: var(--current-day-bg-dark);
+}
+
+body.light-mode .current-day-column {
+    background-color: var(--current-day-bg-light);
+}
+
+.current-break-cell {
+    border-bottom: 3px solid var(--break-highlight-border-dark) !important;
+    padding-bottom: 9px;
+}
+
+body.light-mode .current-break-cell {
+    border-bottom: 3px solid var(--break-highlight-border-light) !important;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    .lesson-name {
+        font-size: 1.5em;
+    }
+
+    th,
+    td {
+        font-size: 0.8em;
+        min-width: 150px;
+    }
+
+    .table-container {
+        padding: 5px;
+    }
+
+    .exam-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .exam-info {
+        align-items: flex-start;
+    }
+}
